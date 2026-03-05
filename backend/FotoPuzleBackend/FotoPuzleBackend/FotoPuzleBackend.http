@@ -1,0 +1,6 @@
+@FotoPuzleBackend_HostAddress = http://localhost:5192
+
+GET {{FotoPuzleBackend_HostAddress}}/registration/
+Accept: application/json
+
+###
