@@ -6,9 +6,9 @@ namespace FotoPuzleBackend.Data
     /// <summary>
     /// Represents the application's database context for managing entity objects and database operations.
     /// </summary>
-    public class appDbContext : DbContext
+    public class AppDbContext : DbContext
     {
-        public appDbContext(DbContextOptions<appDbContext> options) : base(options) { }
+        public AppDbContext(DbContextOptions<AppDbContext> options) : base(options) { }
 
         public DbSet<User> Users => Set<User>();
         public DbSet<Photo> Photos => Set<Photo>();

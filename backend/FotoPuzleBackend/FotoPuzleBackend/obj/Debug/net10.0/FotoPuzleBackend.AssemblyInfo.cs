@@ -14,7 +14,7 @@ using System.Reflection;
 [assembly: System.Reflection.AssemblyCompanyAttribute("FotoPuzleBackend")]
 [assembly: System.Reflection.AssemblyConfigurationAttribute("Debug")]
 [assembly: System.Reflection.AssemblyFileVersionAttribute("1.0.0.0")]
-[assembly: System.Reflection.AssemblyInformationalVersionAttribute("1.0.0+39aa1e350cda81bfb5698e7087369618d9f47dad")]
+[assembly: System.Reflection.AssemblyInformationalVersionAttribute("1.0.0+147a5aebe2cc1d3e0ba7bcabb4e392a9ffc399d5")]
 [assembly: System.Reflection.AssemblyProductAttribute("FotoPuzleBackend")]
 [assembly: System.Reflection.AssemblyTitleAttribute("FotoPuzleBackend")]
 [assembly: System.Reflection.AssemblyVersionAttribute("1.0.0.0")]

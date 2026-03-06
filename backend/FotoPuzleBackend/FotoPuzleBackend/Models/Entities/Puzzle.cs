@@ -1,5 +1,7 @@
 ﻿namespace FotoPuzleBackend.Models.Entities
 {
+    // can later change these values, by updating tables with EF Core, see backend README for more information
+
     public enum DifficultyLevel { Easy, Medium, Hard, Expert }
     public enum PuzzleStatus { Pending, Generating, Ready, Failed }
 
