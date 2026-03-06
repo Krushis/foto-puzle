@@ -1,0 +1,28 @@
+/* Centruojame viską per vidurį */
+.main-container {
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  align-items: center;
+  height: 100vh;           /* Užpildo visą langą */
+  background: linear-gradient(to right, #f5f7fa, #c3cfe2); /* švelni gradient spalva */
+  font-family: 'Arial', sans-serif;
+  text-align: center;
+  padding: 20px;
+}
+
+/* Pagrindinis pavadinimas */
+.main-container h1 {
+  font-size: 4rem;
+  color: #2c3e50;
+  margin-bottom: 20px;
+  letter-spacing: 2px;
+}
+
+/* Trumpas aprašymas */
+.main-container p {
+  font-size: 1.5rem;
+  color: #555;
+  max-width: 600px;
+  line-height: 1.5;
+}
