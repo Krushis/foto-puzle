@@ -1,0 +1,43 @@
+.order-container {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  font-family: Arial, sans-serif;
+  text-align: center;
+  padding: 20px;
+}
+
+.board {
+  position: relative;
+  width: 400px;
+  height: 400px;
+  background: #f0f0f0;
+  border: 2px dashed #ccc;
+  margin-top: 20px;
+}
+
+.puzzle-piece {
+  position: absolute;
+  width: 80px;
+  height: 80px;
+  background: #3498db;
+  color: white;
+  font-weight: bold;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  cursor: grab;
+  user-select: none;
+}
+
+.order-container {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  text-align: center;
+  padding: 20px;
+}
+
+.board-container {
+  position: relative;
+}
