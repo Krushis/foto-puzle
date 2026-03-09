@@ -1,19 +1,33 @@
-﻿using Microsoft.AspNetCore.Http;
-using Microsoft.AspNetCore.Mvc;
+﻿using Microsoft.AspNetCore.Mvc;
+using FotoPuzleBackend.Models.DTO;
 
 namespace FotoPuzleBackend.Controllers
 {
-    // Example of controller for future development, can later make userController, systemController classes
-    // through this we connect backend to frontend by calling API
-
     [Route("api/[controller]")]
     [ApiController]
     public class ExampleController : ControllerBase
     {
         [HttpGet("registration")]
-        public string Get()
+        public IActionResult Get()
         {
-            return "Yes";
+            return Ok(new { message = "Yes" });
+        }
+
+        [HttpPost("registration")]
+        public IActionResult Register([FromBody] RegisterDTO dto)
+        {
+            if (!ModelState.IsValid)
+            {
+                return BadRequest(new { message = "Neteisingi arba neužpildyti duomenys." });
+            }
+
+            return Ok(new
+            {
+                message = "Registracija sėkmingai gauta!",
+                username = dto.Username,
+                email = dto.Email,
+                phone = dto.Phone
+            });
         }
     }
 }

@@ -1,11 +1,11 @@
 {
   "version": 2,
-  "dgSpecHash": "o5uITPVD4rE=",
+  "dgSpecHash": "hZcLNAfdvNI=",
   "success": true,
-  "projectFilePath": "C:\\Users\\Lukas\\Documents\\Programming\\foto-puzle\\foto-puzle\\backend\\FotoPuzleBackend\\FotoPuzleBackend\\FotoPuzleBackend.csproj",
+  "projectFilePath": "C:\\Users\\Rapolas\\foto-puzle\\backend\\FotoPuzleBackend\\FotoPuzleBackend\\FotoPuzleBackend.csproj",
   "expectedPackageFiles": [
-    "C:\\Users\\Lukas\\.nuget\\packages\\microsoft.aspnetcore.openapi\\10.0.3\\microsoft.aspnetcore.openapi.10.0.3.nupkg.sha512",
-    "C:\\Users\\Lukas\\.nuget\\packages\\microsoft.openapi\\2.0.0\\microsoft.openapi.2.0.0.nupkg.sha512"
+    "C:\\Users\\Rapolas\\.nuget\\packages\\microsoft.aspnetcore.openapi\\10.0.3\\microsoft.aspnetcore.openapi.10.0.3.nupkg.sha512",
+    "C:\\Users\\Rapolas\\.nuget\\packages\\microsoft.openapi\\2.0.0\\microsoft.openapi.2.0.0.nupkg.sha512"
   ],
   "logs": []
 }

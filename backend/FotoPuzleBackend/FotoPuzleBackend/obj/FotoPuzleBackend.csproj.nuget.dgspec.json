@@ -1,23 +1,23 @@
 {
   "format": 1,
   "restore": {
-    "C:\\Users\\Lukas\\Documents\\Programming\\foto-puzle\\foto-puzle\\backend\\FotoPuzleBackend\\FotoPuzleBackend\\FotoPuzleBackend.csproj": {}
+    "C:\\Users\\Rapolas\\foto-puzle\\backend\\FotoPuzleBackend\\FotoPuzleBackend\\FotoPuzleBackend.csproj": {}
   },
   "projects": {
-    "C:\\Users\\Lukas\\Documents\\Programming\\foto-puzle\\foto-puzle\\backend\\FotoPuzleBackend\\FotoPuzleBackend\\FotoPuzleBackend.csproj": {
+    "C:\\Users\\Rapolas\\foto-puzle\\backend\\FotoPuzleBackend\\FotoPuzleBackend\\FotoPuzleBackend.csproj": {
       "version": "1.0.0",
       "restore": {
-        "projectUniqueName": "C:\\Users\\Lukas\\Documents\\Programming\\foto-puzle\\foto-puzle\\backend\\FotoPuzleBackend\\FotoPuzleBackend\\FotoPuzleBackend.csproj",
+        "projectUniqueName": "C:\\Users\\Rapolas\\foto-puzle\\backend\\FotoPuzleBackend\\FotoPuzleBackend\\FotoPuzleBackend.csproj",
         "projectName": "FotoPuzleBackend",
-        "projectPath": "C:\\Users\\Lukas\\Documents\\Programming\\foto-puzle\\foto-puzle\\backend\\FotoPuzleBackend\\FotoPuzleBackend\\FotoPuzleBackend.csproj",
-        "packagesPath": "C:\\Users\\Lukas\\.nuget\\packages\\",
-        "outputPath": "C:\\Users\\Lukas\\Documents\\Programming\\foto-puzle\\foto-puzle\\backend\\FotoPuzleBackend\\FotoPuzleBackend\\obj\\",
+        "projectPath": "C:\\Users\\Rapolas\\foto-puzle\\backend\\FotoPuzleBackend\\FotoPuzleBackend\\FotoPuzleBackend.csproj",
+        "packagesPath": "C:\\Users\\Rapolas\\.nuget\\packages\\",
+        "outputPath": "C:\\Users\\Rapolas\\foto-puzle\\backend\\FotoPuzleBackend\\FotoPuzleBackend\\obj\\",
         "projectStyle": "PackageReference",
         "fallbackFolders": [
           "C:\\Program Files (x86)\\Microsoft Visual Studio\\Shared\\NuGetPackages"
         ],
         "configFilePaths": [
-          "C:\\Users\\Lukas\\AppData\\Roaming\\NuGet\\NuGet.Config",
+          "C:\\Users\\Rapolas\\AppData\\Roaming\\NuGet\\NuGet.Config",
           "C:\\Program Files (x86)\\NuGet\\Config\\Microsoft.VisualStudio.FallbackLocation.config",
           "C:\\Program Files (x86)\\NuGet\\Config\\Microsoft.VisualStudio.Offline.config"
         ],
@@ -26,6 +26,7 @@
         ],
         "sources": {
           "C:\\Program Files (x86)\\Microsoft SDKs\\NuGetPackages\\": {},
+          "C:\\Program Files\\dotnet\\library-packs": {},
           "https://api.nuget.org/v3/index.json": {}
         },
         "frameworks": {

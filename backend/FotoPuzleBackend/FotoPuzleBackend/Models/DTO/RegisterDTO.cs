@@ -1,13 +1,19 @@
-﻿namespace FotoPuzleBackend.Models.DTO
+﻿using System.ComponentModel.DataAnnotations;
+
+namespace FotoPuzleBackend.Models.DTO
 {
-    /// <summary>
-    /// Represents the data required to register a new user account, when getting data from DB, in the back we put the info into a DTO object,
-    /// we also get DTO objects from frontend
-    /// </summary>
     public class RegisterDTO
     {
-        public string Name { set; private get; }
-        public string Surname { set; private get; }
+        [Required]
+        public string Username { get; set; } = string.Empty;
 
+        [Required]
+        [EmailAddress]
+        public string Email { get; set; } = string.Empty;
+
+        public string? Phone { get; set; }
+
+        [Required]
+        public string Password { get; set; } = string.Empty;
     }
 }
