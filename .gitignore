@@ -1,0 +1,15 @@
+# Node
+node_modules/
+dist/
+
+# .NET
+bin/
+obj/
+
+# IDE
+.vscode/
+.vs/
+
+# OS
+.DS_Store
+Thumbs.db
