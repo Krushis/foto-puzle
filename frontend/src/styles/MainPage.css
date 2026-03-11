@@ -53,3 +53,35 @@
   transform: translateY(0px);
   box-shadow: none;
 }
+
+.button-group {
+    display: flex;
+    gap: 16px;
+    margin-top: 24px;
+    justify-content: center;
+    flex-wrap: wrap;
+}
+
+.login-button,
+.logout-button {
+    background-color: #24384d;
+    color: white;
+    border: none;
+    padding: 14px 28px;
+    border-radius: 12px;
+    font-size: 18px;
+    font-weight: bold;
+    cursor: pointer;
+}
+
+    .login-button:hover,
+    .logout-button:hover {
+        opacity: 0.95;
+    }
+
+.welcome-text {
+    margin-top: 20px;
+    font-size: 22px;
+    color: #24384d;
+    font-weight: 600;
+}
