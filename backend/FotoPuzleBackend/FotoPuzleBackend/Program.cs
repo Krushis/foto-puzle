@@ -24,7 +24,12 @@ builder.Services.AddDbContext<AppDbContext>(options =>
 
 var app = builder.Build();
 
-app.UseHttpsRedirection();
+if (app.Environment.IsDevelopment())
+{
+    app.MapOpenApi();
+}
+
+//app.UseHttpsRedirection();
 
 app.UseCors("AllowFrontend");
 
