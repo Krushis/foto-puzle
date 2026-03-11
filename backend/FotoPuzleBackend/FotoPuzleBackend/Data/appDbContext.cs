@@ -1,5 +1,5 @@
-﻿using FotoPuzleBackend.Models.Entities;
-using Microsoft.EntityFrameworkCore;
+﻿using Microsoft.EntityFrameworkCore;
+using FotoPuzleBackend.Models.Entities;
 
 namespace FotoPuzleBackend.Data
 {
