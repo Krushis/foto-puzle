@@ -1,11 +1,17 @@
 /* Centruojame viską per vidurį */
+
+body{
+  overflow: hidden;
+}
+
 .main-container {
+  position: relative; /* add this line */
   display: flex;
   flex-direction: column;
   justify-content: center;
   align-items: center;
-  height: 100vh;           /* Užpildo visą langą */
-  background: linear-gradient(to right, #f5f7fa, #c3cfe2); /* švelni gradient spalva */
+  height: 100vh;
+  background: linear-gradient(to right, #f5f7fa, #c3cfe2);
   font-family: 'Arial', sans-serif;
   text-align: center;
   padding: 20px;
@@ -84,4 +90,22 @@
     font-size: 22px;
     color: #24384d;
     font-weight: 600;
+}
+
+.navbar {
+  position: absolute;
+  top: 20px;
+  right: 24px;
+}
+
+.profile-icon {
+  background: none;
+  border: none;
+  font-size: 1.8rem;
+  cursor: pointer;
+  transition: transform 0.2s ease;
+}
+
+.profile-icon:hover {
+  transform: scale(1.2);
 }

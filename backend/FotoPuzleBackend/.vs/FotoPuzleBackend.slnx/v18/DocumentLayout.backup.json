@@ -3,16 +3,16 @@
   "WorkspaceRootPath": "C:\\Users\\Lukas\\Documents\\Programming\\foto-puzle\\foto-puzle\\backend\\FotoPuzleBackend\\",
   "Documents": [
     {
+      "AbsoluteMoniker": "D:0:0:{3AA8CC96-B11E-741B-190B-C6E9C830E219}|FotoPuzleBackend\\FotoPuzleBackend.csproj|c:\\users\\lukas\\documents\\programming\\foto-puzle\\foto-puzle\\backend\\fotopuzlebackend\\fotopuzlebackend\\fotopuzlebackend.csproj||{FA3CD31E-987B-443A-9B81-186104E8DAC1}|",
+      "RelativeMoniker": "D:0:0:{3AA8CC96-B11E-741B-190B-C6E9C830E219}|FotoPuzleBackend\\FotoPuzleBackend.csproj|solutionrelative:fotopuzlebackend\\fotopuzlebackend.csproj||{FA3CD31E-987B-443A-9B81-186104E8DAC1}|"
+    },
+    {
       "AbsoluteMoniker": "D:0:0:{3AA8CC96-B11E-741B-190B-C6E9C830E219}|FotoPuzleBackend\\FotoPuzleBackend.csproj|c:\\users\\lukas\\documents\\programming\\foto-puzle\\foto-puzle\\backend\\fotopuzlebackend\\fotopuzlebackend\\program.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}",
       "RelativeMoniker": "D:0:0:{3AA8CC96-B11E-741B-190B-C6E9C830E219}|FotoPuzleBackend\\FotoPuzleBackend.csproj|solutionrelative:fotopuzlebackend\\program.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}"
     },
     {
       "AbsoluteMoniker": "D:0:0:{3AA8CC96-B11E-741B-190B-C6E9C830E219}|FotoPuzleBackend\\FotoPuzleBackend.csproj|c:\\users\\lukas\\documents\\programming\\foto-puzle\\foto-puzle\\backend\\fotopuzlebackend\\fotopuzlebackend\\data\\appdbcontext.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}",
       "RelativeMoniker": "D:0:0:{3AA8CC96-B11E-741B-190B-C6E9C830E219}|FotoPuzleBackend\\FotoPuzleBackend.csproj|solutionrelative:fotopuzlebackend\\data\\appdbcontext.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}"
-    },
-    {
-      "AbsoluteMoniker": "D:0:0:{3AA8CC96-B11E-741B-190B-C6E9C830E219}|FotoPuzleBackend\\FotoPuzleBackend.csproj|c:\\users\\lukas\\documents\\programming\\foto-puzle\\foto-puzle\\backend\\fotopuzlebackend\\fotopuzlebackend\\controllers\\examplecontroller.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}",
-      "RelativeMoniker": "D:0:0:{3AA8CC96-B11E-741B-190B-C6E9C830E219}|FotoPuzleBackend\\FotoPuzleBackend.csproj|solutionrelative:fotopuzlebackend\\controllers\\examplecontroller.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}"
     },
     {
       "AbsoluteMoniker": "D:0:0:{3AA8CC96-B11E-741B-190B-C6E9C830E219}|FotoPuzleBackend\\FotoPuzleBackend.csproj|c:\\users\\lukas\\documents\\programming\\foto-puzle\\foto-puzle\\backend\\fotopuzlebackend\\fotopuzlebackend\\models\\entities\\user.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}",
@@ -31,25 +31,38 @@
             {
               "$type": "Document",
               "DocumentIndex": 0,
+              "Title": "FotoPuzleBackend",
+              "DocumentMoniker": "C:\\Users\\Lukas\\Documents\\Programming\\foto-puzle\\foto-puzle\\backend\\FotoPuzleBackend\\FotoPuzleBackend\\FotoPuzleBackend.csproj",
+              "RelativeDocumentMoniker": "FotoPuzleBackend\\FotoPuzleBackend.csproj",
+              "ToolTip": "C:\\Users\\Lukas\\Documents\\Programming\\foto-puzle\\foto-puzle\\backend\\FotoPuzleBackend\\FotoPuzleBackend\\FotoPuzleBackend.csproj",
+              "RelativeToolTip": "FotoPuzleBackend\\FotoPuzleBackend.csproj",
+              "ViewState": "AgIAAAAAAAAAAAAAAAAAABMAAAAOAAAAAAAAAA==",
+              "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000758|",
+              "WhenOpened": "2026-03-11T21:39:12.728Z",
+              "EditorCaption": ""
+            },
+            {
+              "$type": "Document",
+              "DocumentIndex": 1,
               "Title": "Program.cs",
               "DocumentMoniker": "C:\\Users\\Lukas\\Documents\\Programming\\foto-puzle\\foto-puzle\\backend\\FotoPuzleBackend\\FotoPuzleBackend\\Program.cs",
               "RelativeDocumentMoniker": "FotoPuzleBackend\\Program.cs",
               "ToolTip": "C:\\Users\\Lukas\\Documents\\Programming\\foto-puzle\\foto-puzle\\backend\\FotoPuzleBackend\\FotoPuzleBackend\\Program.cs",
               "RelativeToolTip": "FotoPuzleBackend\\Program.cs",
-              "ViewState": "AgIAAAAAAAAAAAAAAAAAABoAAAABAAAAAAAAAA==",
+              "ViewState": "AgIAAAAAAAAAAAAAAAAAABIAAAA2AAAAAAAAAA==",
               "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000738|",
               "WhenOpened": "2026-03-11T18:35:16.953Z",
               "EditorCaption": ""
             },
             {
               "$type": "Document",
-              "DocumentIndex": 1,
+              "DocumentIndex": 2,
               "Title": "appDbContext.cs",
               "DocumentMoniker": "C:\\Users\\Lukas\\Documents\\Programming\\foto-puzle\\foto-puzle\\backend\\FotoPuzleBackend\\FotoPuzleBackend\\Data\\appDbContext.cs",
               "RelativeDocumentMoniker": "FotoPuzleBackend\\Data\\appDbContext.cs",
               "ToolTip": "C:\\Users\\Lukas\\Documents\\Programming\\foto-puzle\\foto-puzle\\backend\\FotoPuzleBackend\\FotoPuzleBackend\\Data\\appDbContext.cs",
               "RelativeToolTip": "FotoPuzleBackend\\Data\\appDbContext.cs",
-              "ViewState": "AgIAAAAAAAAAAAAAAAAAAA8AAAAAAAAAAAAAAA==",
+              "ViewState": "AgIAABIAAAAAAAAAAAAIwB4AAAAAAAAAAAAAAA==",
               "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000738|",
               "WhenOpened": "2026-03-05T22:55:40.263Z",
               "EditorCaption": ""
@@ -62,21 +75,9 @@
               "RelativeDocumentMoniker": "FotoPuzleBackend\\Models\\Entities\\User.cs",
               "ToolTip": "C:\\Users\\Lukas\\Documents\\Programming\\foto-puzle\\foto-puzle\\backend\\FotoPuzleBackend\\FotoPuzleBackend\\Models\\Entities\\User.cs",
               "RelativeToolTip": "FotoPuzleBackend\\Models\\Entities\\User.cs",
-              "ViewState": "AgIAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA==",
+              "ViewState": "AgIAAAkAAAAAAAAAAAAywBYAAAAAAAAAAAAAAA==",
               "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000738|",
-              "WhenOpened": "2026-03-05T22:54:40.785Z"
-            },
-            {
-              "$type": "Document",
-              "DocumentIndex": 2,
-              "Title": "ExampleController.cs",
-              "DocumentMoniker": "C:\\Users\\Lukas\\Documents\\Programming\\foto-puzle\\foto-puzle\\backend\\FotoPuzleBackend\\FotoPuzleBackend\\Controllers\\ExampleController.cs",
-              "RelativeDocumentMoniker": "FotoPuzleBackend\\Controllers\\ExampleController.cs",
-              "ToolTip": "C:\\Users\\Lukas\\Documents\\Programming\\foto-puzle\\foto-puzle\\backend\\FotoPuzleBackend\\FotoPuzleBackend\\Controllers\\ExampleController.cs",
-              "RelativeToolTip": "FotoPuzleBackend\\Controllers\\ExampleController.cs",
-              "ViewState": "AgIAAAMAAAAAAAAAAAAAAB8AAAAAAAAAAAAAAA==",
-              "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000738|",
-              "WhenOpened": "2026-03-04T12:16:09.914Z",
+              "WhenOpened": "2026-03-05T22:54:40.785Z",
               "EditorCaption": ""
             }
           ]

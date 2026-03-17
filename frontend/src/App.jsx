@@ -1,6 +1,7 @@
 import React from "react";
 import { BrowserRouter, Routes, Route } from "react-router-dom";
 
+import ProfilePage from "./pages/ProfilePage";
 import MainPage from "./pages/MainPage";
 import CheckOutPage from "./pages/CheckOutPage";
 import RegistrationPage from "./pages/RegistrationPage";
@@ -13,6 +14,7 @@ function App() {
                 <Route path="/" element={<MainPage />} />
                 <Route path="/checkout" element={<CheckOutPage />} />
                 <Route path="/register" element={<RegistrationPage />} />
+                <Route path="/profile" element={<ProfilePage />} />
                 <Route path="/login" element={<LoginPage />} />
             </Routes>
         </BrowserRouter>
