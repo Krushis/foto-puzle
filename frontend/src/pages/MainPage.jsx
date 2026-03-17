@@ -6,7 +6,7 @@ function MainPage() {
     const navigate = useNavigate();
     const isLoggedIn = localStorage.getItem("isLoggedIn") === "true";
     const user = JSON.parse(localStorage.getItem("user") || "null");
-    const userName = user?.name || "";
+    const userName = user?.username || "";
 
     const handleLogout = () => {
         localStorage.removeItem("isLoggedIn");

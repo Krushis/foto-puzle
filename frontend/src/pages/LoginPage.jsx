@@ -65,9 +65,6 @@ function LoginPage() {
                 <button type="submit">Prisijungti</button>
             </form>
 
-            <p className="dummy-info">
-                Testiniai duomenys: admin@foto.lt / 123456
-            </p>
         </div>
     );
 }

@@ -1,5 +1,7 @@
+ï»¿using FotoPuzleBackend.Data;
 using FotoPuzleBackend.DTO;
 using Microsoft.AspNetCore.Mvc;
+using Microsoft.EntityFrameworkCore;
 
 namespace FotoPuzleBackend.Controllers
 {
@@ -7,23 +9,32 @@ namespace FotoPuzleBackend.Controllers
     [Route("api/[controller]")]
     public class AuthController : ControllerBase
     {
-        [HttpPost("login")]
-        public IActionResult Login([FromBody] LoginDTO loginDto)
-        {
-            if (loginDto.Email == "admin@foto.lt" && loginDto.Password == "123456")
-            {
-                return Ok(new
-                {
-                    message = "Prisijungimas sëkmingas",
-                    user = new
-                    {
-                        email = loginDto.Email,
-                        name = "Admin"
-                    }
-                });
-            }
+        private readonly AppDbContext _context;
 
-            return Unauthorized(new { message = "Neteisingas el. paðtas arba slaptaþodis" });
+        public AuthController(AppDbContext context)
+        {
+            _context = context;
+        }
+
+        [HttpPost("login")]
+        public async Task<IActionResult> Login([FromBody] LoginDTO loginDto)
+        {
+            var user = await _context.Users
+                .FirstOrDefaultAsync(u => u.Email == loginDto.Email);
+
+            if (user == null || user.PasswordHash != loginDto.Password)
+                return Unauthorized(new { message = "Neteisingas el. paÅ¡tas arba slaptaÅ¾odis" });
+
+            return Ok(new
+            {
+                message = "Prisijungimas sÄ—kmingas",
+                user = new
+                {
+                    id = user.Id,
+                    email = user.Email,
+                    username = user.Username
+                }
+            });
         }
     }
 }

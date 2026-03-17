@@ -48,7 +48,7 @@
               "RelativeDocumentMoniker": "FotoPuzleBackend\\Controllers\\AuthController.cs",
               "ToolTip": "C:\\Users\\Lukas\\Documents\\Programming\\foto-puzle\\foto-puzle\\backend\\FotoPuzleBackend\\FotoPuzleBackend\\Controllers\\AuthController.cs",
               "RelativeToolTip": "FotoPuzleBackend\\Controllers\\AuthController.cs",
-              "ViewState": "AgIAAAIAAAAAAAAAAAAwwBMAAAAvAAAAAAAAAA==",
+              "ViewState": "AgIAAAAAAAAAAAAAAAAAAA4AAAAJAAAAAAAAAA==",
               "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000738|",
               "WhenOpened": "2026-03-17T22:03:35.443Z",
               "EditorCaption": ""
@@ -63,8 +63,7 @@
               "RelativeToolTip": "FotoPuzleBackend\\Models\\DTO\\LoginDTO.cs",
               "ViewState": "AgIAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA==",
               "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000738|",
-              "WhenOpened": "2026-03-17T22:03:13.023Z",
-              "EditorCaption": ""
+              "WhenOpened": "2026-03-17T22:03:13.023Z"
             },
             {
               "$type": "Document",
@@ -76,8 +75,7 @@
               "RelativeToolTip": "FotoPuzleBackend\\Models\\DTO\\UserProfileDTO.cs",
               "ViewState": "AgIAAAAAAAAAAAAAAAAAAAoAAAAtAAAAAAAAAA==",
               "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000738|",
-              "WhenOpened": "2026-03-17T21:26:35.133Z",
-              "EditorCaption": ""
+              "WhenOpened": "2026-03-17T21:26:35.133Z"
             },
             {
               "$type": "Document",
@@ -89,8 +87,7 @@
               "RelativeToolTip": "FotoPuzleBackend\\Controllers\\UserController.cs",
               "ViewState": "AgIAAAcAAAAAAAAAAAAAABYAAAArAAAAAAAAAA==",
               "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000738|",
-              "WhenOpened": "2026-03-17T21:22:43.52Z",
-              "EditorCaption": ""
+              "WhenOpened": "2026-03-17T21:22:43.52Z"
             },
             {
               "$type": "Document",
@@ -102,8 +99,7 @@
               "RelativeToolTip": "FotoPuzleBackend\\Program.cs",
               "ViewState": "AgIAAAMAAAAAAAAAAAAAACEAAAAdAAAAAAAAAA==",
               "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000738|",
-              "WhenOpened": "2026-03-11T18:35:16.953Z",
-              "EditorCaption": ""
+              "WhenOpened": "2026-03-11T18:35:16.953Z"
             },
             {
               "$type": "Document",
@@ -115,8 +111,7 @@
               "RelativeToolTip": "FotoPuzleBackend\\Data\\appDbContext.cs",
               "ViewState": "AgIAAAYAAAAAAAAAAAAuwBMAAAAoAAAAAAAAAA==",
               "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000738|",
-              "WhenOpened": "2026-03-05T22:55:40.263Z",
-              "EditorCaption": ""
+              "WhenOpened": "2026-03-05T22:55:40.263Z"
             },
             {
               "$type": "Document",
@@ -128,8 +123,7 @@
               "RelativeToolTip": "FotoPuzleBackend\\Models\\Entities\\User.cs",
               "ViewState": "AgIAAAcAAAAAAAAAAAAzwBQAAABCAAAAAAAAAA==",
               "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000738|",
-              "WhenOpened": "2026-03-05T22:54:40.785Z",
-              "EditorCaption": ""
+              "WhenOpened": "2026-03-05T22:54:40.785Z"
             }
           ]
         }
