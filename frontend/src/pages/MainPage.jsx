@@ -42,6 +42,9 @@ function MainPage() {
                             <button className="login-button" onClick={() => navigate("/login")}>
                                 Prisijungti
                             </button>
+                            <button className="checkout-button" onClick={() => navigate("/checkout")}>
+                                Temp checkout button
+                            </button>
                         </>
                     ) : (
                         <button className="logout-button" onClick={handleLogout}>
