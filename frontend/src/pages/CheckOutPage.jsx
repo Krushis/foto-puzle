@@ -3,11 +3,11 @@ import React, { useState, useRef } from 'react';
 const MAX_BOARD_SIZE = 480;
 
 const ratioConfig = {
-  '1:1':  { value: 1,       pieces: [9, 16, 25, 36] },
-  '4:3':  { value: 4 / 3,   pieces: [12, 48, 96] },
-  '3:4':  { value: 3 / 4,   pieces: [12, 48, 96] },
-  '16:9': { value: 16 / 9,  pieces: [16, 40, 144] },
-  '9:16': { value: 9 / 16,  pieces: [16, 40, 144] },
+  '1:1':  { value: 1,       pieces: [9, 25, 36] },
+  '4:3':  { value: 4 / 3,   pieces: [12, 48] },
+  '3:4':  { value: 3 / 4,   pieces: [12, 48] },
+  '16:9': { value: 16 / 9,  pieces: [16, 40] },
+  '9:16': { value: 9 / 16,  pieces: [16, 40] },
 };
 
 function chooseGrid(count, ratio) {
@@ -70,6 +70,7 @@ export default function CheckOutPage() {
   const [selectedCount, setSelectedCount] = useState(ratioConfig['4:3'].pieces[0]);
   const [message, setMessage]         = useState('Choose a ratio, upload a photo, then drag pieces onto the board.');
   const [solved, setSolved]           = useState(false);
+  const [rewardClaimed, setRewardClaimed] = useState(false);
 
   // Drag state — kept in a ref so mouse handlers don't need stale closures
   const drag = useRef(null);          // { id, fromBoard, offsetX, offsetY }
@@ -80,14 +81,7 @@ export default function CheckOutPage() {
 
   // ─── build puzzle ──────────────────────────────────────────────────────────
   const buildPuzzle = (count, assetW, assetH, url, ratioValue) => {
-    let boardW = assetW;
-    let boardH = assetH;
-    if (assetW / assetH > ratioValue) {
-      boardW = Math.round(assetH * ratioValue);
-    } else {
-      boardH = Math.round(assetW / ratioValue);
-    }
-
+    const { width: boardW, height: boardH } = getBoardSize(ratioValue);
     const grid = chooseGrid(count, ratioValue);
     const result = createPieces(url, grid.rows, grid.cols, boardW, boardH);
     setPieces(result.pieces);
@@ -104,6 +98,36 @@ export default function CheckOutPage() {
     setSolved(false);
     setMessage(`${grid.rows}×${grid.cols} = ${count} pieces — drag them onto the board!`);
   };
+
+  function getBoardSize(ratio) {
+  let width = MAX_BOARD_SIZE;
+  let height = Math.round(width / ratio);
+
+  if (height > MAX_BOARD_SIZE) {
+    height = MAX_BOARD_SIZE;
+    width = Math.round(height * ratio);
+  }
+
+  return { width, height };
+}
+
+const shuffleUnsolved = () => {
+  const trayRect = trayRef.current.getBoundingClientRect();
+
+  setPieces(prev => prev.map(p => {
+    if (p.locked) return p; // ❗ paliekam vietoje
+
+    const randomX = Math.random() * (trayRect.width - p.tileW);
+    const randomY = Math.random() * (trayRect.height - p.tileH);
+
+    return {
+      ...p,
+      left: randomX,
+      top: randomY,
+      onBoard: false,
+    };
+  }));
+};
 
   // ─── controls ──────────────────────────────────────────────────────────────
   const handleRatioChange = (e) => {
@@ -123,12 +147,16 @@ export default function CheckOutPage() {
     const url = URL.createObjectURL(file);
     const img = new Image();
     img.onload = () => {
-      const scale = Math.min(MAX_BOARD_SIZE / img.width, MAX_BOARD_SIZE / img.height, 1);
-      const w = Math.max(160, Math.round(img.width  * scale));
-      const h = Math.max(160, Math.round(img.height * scale));
       setImageUrl(url);
-      setAssetSize({ w, h });
-      buildPuzzle(selectedCount, w, h, url, ratioConfig[selectedRatio].value);
+      setAssetSize({ w: img.width, h: img.height });
+
+      buildPuzzle(
+        selectedCount,
+        img.width,
+        img.height,
+        url,
+        ratioConfig[selectedRatio].value
+      );
     };
     img.src = url;
   };
@@ -224,7 +252,7 @@ export default function CheckOutPage() {
 
       // Check if fully solved
       if (next.every(p => p.locked)) {
-        setMessage('🎉 Puzzle solved! Great job!');
+        setMessage('Puzlė sudėta sėkmingai!');
         setSolved(true);
       }
 
@@ -243,12 +271,62 @@ export default function CheckOutPage() {
   // ─── render ────────────────────────────────────────────────────────────────
   return (
     <div
-      style={{ fontFamily: 'sans-serif', padding: 24, userSelect: 'none', display: 'flex', flexDirection: 'column', alignItems: 'center' }}
-      onMouseMove={onMouseMove}
-      onMouseUp={onMouseUp}
-    >
+  style={{
+    fontFamily: 'sans-serif',
+    padding: 24,
+    userSelect: 'none',
+    display: 'flex',
+    flexDirection: 'column',
+    alignItems: 'center',
+    height: '100vh',
+    overflowY: 'auto',
+  }}
+  onMouseMove={onMouseMove}
+  onMouseUp={onMouseUp}
+>
       <h1 style={{ marginBottom: 8 }}>Foto-Puzlė</h1>
       <p style={{ color: '#555', marginBottom: 16 }}>{message}</p>
+
+      {solved && (
+  <div
+    style={{
+      marginBottom: 20,
+      padding: 16,
+      border: '2px solid #16a34a',
+      borderRadius: 8,
+      background: '#c3cfe2',
+      textAlign: 'center',
+      maxWidth: 400,
+    }}
+  >
+    <h2 style={{ margin: '0 0 8px 0', color: '#166534' }}>
+      🎉 Sveikinu!
+    </h2>
+
+    <p style={{ marginBottom: 12 }}>
+      Laimėjai <b>5% nuolaidą</b> kitam pirkiniui.
+    </p>
+
+    <button
+       onClick={() => {
+    setRewardClaimed(true);
+    alert('🎁 Prizas atsiimtas!');
+  }}
+  disabled={rewardClaimed}
+  style={{
+    padding: '8px 16px',
+    background: rewardClaimed ? '#9ca3af' : '#16a34a',
+    color: '#fff',
+    border: 'none',
+    borderRadius: 6,
+    cursor: rewardClaimed ? 'not-allowed' : 'pointer',
+    fontWeight: 600,
+  }}
+    >
+      {rewardClaimed ? 'Prizas jau atsiimtas' : 'Atsiimti prizą'}
+    </button>
+  </div>
+)}
 
       {/* ── Controls ── */}
       <div style={{ display: 'flex', gap: 16, flexWrap: 'wrap', alignItems: 'center', justifyContent: 'center', marginBottom: 24 }}>
@@ -275,7 +353,7 @@ export default function CheckOutPage() {
 
         {boardInfo && (
           <button
-            onClick={() => buildPuzzle(selectedCount, assetSize.w, assetSize.h, imageUrl, ratioConfig[selectedRatio].value)}
+            onClick={() => shuffleUnsolved()}
             style={{ padding: '4px 14px', cursor: 'pointer' }}
           >
             Shuffle
@@ -284,12 +362,21 @@ export default function CheckOutPage() {
       </div>
 
       {boardInfo ? (
-        <div style={{ display: 'flex', flexDirection: 'column', alignItems: 'center', gap: 24 }}>
+        <div
+  style={{
+    display: 'flex',
+    flexDirection: solved ? 'column' : 'row',
+    alignItems: 'center',
+    justifyContent: 'center',
+    gap: 24,
+    width: '100%',
+  }}
+>
 
           {/* ── BOARD ── */}
           <div style={{ display: 'flex', flexDirection: 'column', alignItems: 'center' }}>
-            <div style={{ marginBottom: 6, fontWeight: 600, color: '#374151' }}>
-              Board {solved && '✅'}
+            <div style={{ marginBottom: 6, fontWeight: 600, color: '#ffffff' }}>
+              Board {solved}
             </div>
             <div
               ref={boardRef}
@@ -302,21 +389,26 @@ export default function CheckOutPage() {
                 boxShadow: '0 2px 12px rgba(0,0,0,0.15)',
               }}
             >
-              {/* Grid guide lines */}
-              {Array.from({ length: boardInfo.rows + 1 }).map((_, i) => (
-                <div key={`h${i}`} style={{
-                  position: 'absolute', left: 0, right: 0,
-                  top: i * boardInfo.tileH - 1,
-                  height: 1, background: 'rgba(0,0,0,0.15)', pointerEvents: 'none',
-                }} />
-              ))}
-              {Array.from({ length: boardInfo.cols + 1 }).map((_, i) => (
-                <div key={`v${i}`} style={{
-                  position: 'absolute', top: 0, bottom: 0,
-                  left: i * boardInfo.tileW - 1,
-                  width: 1, background: 'rgba(0,0,0,0.15)', pointerEvents: 'none',
-                }} />
-              ))}
+             {/* Grid guide lines */}
+{!solved && (
+  <>
+    {Array.from({ length: boardInfo.rows + 1 }).map((_, i) => (
+      <div key={`h${i}`} style={{
+        position: 'absolute', left: 0, right: 0,
+        top: i * boardInfo.tileH - 1,
+        height: 1, background: 'rgba(0,0,0,0.15)', pointerEvents: 'none',
+      }} />
+    ))}
+
+    {Array.from({ length: boardInfo.cols + 1 }).map((_, i) => (
+      <div key={`v${i}`} style={{
+        position: 'absolute', top: 0, bottom: 0,
+        left: i * boardInfo.tileW - 1,
+        width: 1, background: 'rgba(0,0,0,0.15)', pointerEvents: 'none',
+      }} />
+    ))}
+  </>
+)}
 
               {boardPieces.map(p => {
                 const isFloating = floater?.id === p.id;
@@ -336,37 +428,41 @@ export default function CheckOutPage() {
           </div>
 
           {/* ── TRAY ── */}
-          <div style={{ display: 'flex', flexDirection: 'column', alignItems: 'center' }}>
-            <div style={{ marginBottom: 6, fontWeight: 600, color: '#374151' }}>
-              Pieces ({trayPieces.length} remaining)
-            </div>
-            <div
-              ref={trayRef}
-              style={{
-                position: 'relative',
-                width:  boardInfo.scatterW,
-                height: boardInfo.scatterH,
-                border: '2px dashed #9ca3af',
-                background: '#f9fafb',
-                boxShadow: 'inset 0 2px 8px rgba(0,0,0,0.06)',
-              }}
-            >
-              {trayPieces.map(p => {
-                const isFloating = floater?.id === p.id;
-                if (isFloating) return null;
-                return (
-                  <PuzzlePiece
-                    key={p.id}
-                    piece={p}
-                    imageUrl={imageUrl}
-                    boardW={boardInfo.width}
-                    boardH={boardInfo.height}
-                    onMouseDown={(e) => startDrag(e, p.id, false)}
-                  />
-                );
-              })}
-            </div>
-          </div>
+          {!solved && (
+  <div style={{ display: 'flex', flexDirection: 'column', alignItems: 'center' }}>
+    <div style={{ marginBottom: 6, fontWeight: 600, color: '#374151' }}>
+      Pieces ({trayPieces.length} remaining)
+    </div>
+
+    <div
+      ref={trayRef}
+      style={{
+        position: 'relative',
+        width:  boardInfo.width,
+        height: boardInfo.height,
+        overflowY: 'auto',
+        border: '2px dashed #9ca3af',
+        background: '#f9fafb',
+        boxShadow: 'inset 0 2px 8px rgba(0,0,0,0.06)',
+      }}
+    >
+      {trayPieces.map(p => {
+        const isFloating = floater?.id === p.id;
+        if (isFloating) return null;
+        return (
+          <PuzzlePiece
+            key={p.id}
+            piece={p}
+            imageUrl={imageUrl}
+            boardW={boardInfo.width}
+            boardH={boardInfo.height}
+            onMouseDown={(e) => startDrag(e, p.id, false)}
+          />
+        );
+      })}
+    </div>
+  </div>
+)}
         </div>
       ) : (
         <div style={{
@@ -425,10 +521,10 @@ function PuzzlePiece({ piece, imageUrl, boardW, boardH, onMouseDown, style = {} 
         width:     tileW,
         height:    tileH,
         ...bgStyle,
-        border:    locked ? '1.5px solid rgba(0,180,0,0.6)' : '1.5px solid rgba(0,0,0,0.35)',
+        border:    locked ? '1px solid rgba(0,180,0,0.6)' : '1.5px solid rgba(0,0,0,0.35)',
         boxSizing: 'border-box',
         cursor:    locked ? 'default' : 'grab',
-        outline:   locked ? '2px solid #16a34a' : 'none',
+        outline:   locked ? '1px solid #16a34a' : 'none',
         ...style,
       }}
     />
