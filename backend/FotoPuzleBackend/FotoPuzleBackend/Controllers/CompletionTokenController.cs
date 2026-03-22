@@ -1,0 +1,52 @@
+﻿using FotoPuzleBackend.Services;
+using Microsoft.AspNetCore.Mvc;
+
+namespace FotoPuzleBackend.Controllers
+{
+    [ApiController]
+    [Route("api/[controller]")]
+    public class CompletionTokenController : ControllerBase
+    {
+        private readonly CompletionTokenService _tokenService;
+
+        public CompletionTokenController(CompletionTokenService tokenService)
+        {
+            _tokenService = tokenService;
+        }
+
+        // POST /api/completiontoken/issue
+        [HttpPost("issue")]
+        public async Task<IActionResult> Issue([FromBody] IssueTokenRequest request)
+        {
+            try
+            {
+                var token = await _tokenService.IssueTokenAsync(request.UserId, request.PuzzleId);
+                return Ok(new { token.Token, token.EarnedAt });
+            }
+            catch (InvalidOperationException ex)
+            {
+                return BadRequest(new { error = ex.Message });
+            }
+        }
+
+        // GET /api/completiontoken/my?userId=1
+        [HttpGet("my")]
+        public async Task<IActionResult> GetMyTokens([FromQuery] int userId)
+        {
+            var tokens = await _tokenService.GetUserTokensAsync(userId);
+            return Ok(tokens.Select(t => new { t.Token, t.EarnedAt, t.PuzzleId }));
+        }
+
+        // GET /api/completiontoken/validate?userId=1&token=<guid>
+        [HttpGet("validate")]
+        public async Task<IActionResult> Validate([FromQuery] int userId, [FromQuery] string token)
+        {
+            var isValid = await _tokenService.ValidateTokenAsync(userId, token);
+            return Ok(new { valid = isValid });
+        }
+    }
+
+    // TODO Sprint 3 or 4: remove UserId from here once JWT is wired up,
+    // and read it from claims via User.FindFirst(ClaimTypes.NameIdentifier) instead
+    public record IssueTokenRequest(int UserId, int PuzzleId);
+}
