@@ -1,4 +1,5 @@
 using FotoPuzleBackend.Data;
+using FotoPuzleBackend.Services;
 using Microsoft.EntityFrameworkCore;
 
 var builder = WebApplication.CreateBuilder(args);
@@ -15,6 +16,7 @@ builder.Services.AddCors(options =>
 });
 
 builder.Services.AddControllers();
+builder.Services.AddScoped<CompletionTokenService>();
 
 builder.Services.AddDbContext<AppDbContext>(options =>
     options.UseMySql(

@@ -71,6 +71,7 @@ export default function CheckOutPage() {
   const [message, setMessage] = useState('Pasirinkite jūsų nuotraukos santykį ir įkelkite nuotrauką užsakymui');
   const [solved, setSolved] = useState(false);
   const [rewardClaimed, setRewardClaimed] = useState(false);
+  const [discountToken, setDiscountToken] = useState(null);
 
   // Drag state — kept in a ref so mouse handlers don't need stale closures
   const drag = useRef(null);          // { id, fromBoard, offsetX, offsetY }
@@ -78,6 +79,7 @@ export default function CheckOutPage() {
   // Refs to the two containers so we can get their bounding rects
   const boardRef = useRef(null);
   const trayRef = useRef(null);
+  const justSolvedRef = useRef(false); // reference for solving the puzzle
 
   // ─── build puzzle ──────────────────────────────────────────────────────────
   const buildPuzzle = (count, assetW, assetH, url, ratioValue) => {
@@ -142,7 +144,7 @@ export default function CheckOutPage() {
   const handleFile = (e) => {
     const file = e.target.files?.[0];
     if (!file) return;
-    const url = URL.createObjectURL(file);
+    const url = URL.createObjectURL(file); 
     const img = new Image();
     img.onload = () => {
       setImageUrl(url);
@@ -205,6 +207,8 @@ export default function CheckOutPage() {
     const boardRect = boardRef.current.getBoundingClientRect();
     const trayRect = trayRef.current.getBoundingClientRect();
 
+    justSolvedRef.current = false;
+
     // Where did the mouse land (top-left of piece in page coords)?
     const piecePageX = e.clientX - offsetX;
     const piecePageY = e.clientY - offsetY;
@@ -216,59 +220,50 @@ export default function CheckOutPage() {
       centrePX >= boardRect.left && centrePX <= boardRect.right &&
       centrePY >= boardRect.top && centrePY <= boardRect.bottom;
 
-    setPieces(prev => {
-      const next = prev.map(p => {
-        if (p.id !== id) return p;
+    const nextPieces = pieces.map(p => {
+      if (p.id !== id) return p;
 
-        if (overBoard) {
-          // Position relative to board container
-          const localX = piecePageX - boardRect.left;
-          const localY = piecePageY - boardRect.top;
+      if (overBoard) {
+        const localX = piecePageX - boardRect.left;
+        const localY = piecePageY - boardRect.top;
+        const snapX = Math.round(localX / p.tileW) * p.tileW;
+        const snapY = Math.round(localY / p.tileH) * p.tileH;
+        const dx = Math.abs(p.correctLeft - snapX);
+        const dy = Math.abs(p.correctTop - snapY);
+        const threshold = Math.max(8, Math.min(p.tileW, p.tileH) * 0.2);
 
-          // Snap to grid
-          const snapX = Math.round(localX / p.tileW) * p.tileW;
-          const snapY = Math.round(localY / p.tileH) * p.tileH;
-
-          const dx = Math.abs(p.correctLeft - snapX);
-          const dy = Math.abs(p.correctTop - snapY);
-          const threshold = Math.max(8, Math.min(p.tileW, p.tileH) * 0.2);
-
-          // snap ONLY if very close
-          if (dx <= threshold && dy <= threshold) {
-            return {
-              ...p,
-              left: p.correctLeft,
-              top: p.correctTop,
-              locked: true,
-              onBoard: true
-            };
-          }
-
-          // otherwise just stay where dropped (NO snapping)
-          return {
-            ...p,
-            left: snapX,
-            top: snapY,
-            locked: false,
-            onBoard: true
-          };
-
+        if (dx <= threshold && dy <= threshold) {
+          return { ...p, left: p.correctLeft, top: p.correctTop, locked: true, onBoard: true };
         }
-
-        // Dropped back on tray
-        const localX = Math.max(0, Math.min(piecePageX - trayRect.left, trayRect.width - p.tileW));
-        const localY = Math.max(0, Math.min(piecePageY - trayRect.top, trayRect.height - p.tileH));
-        return { ...p, left: localX, top: localY, locked: false, onBoard: false };
-      });
-
-      // Check if fully solved
-      if (next.every(p => p.locked)) {
-        setMessage('Puzlė sudėta sėkmingai!');
-        setSolved(true);
+        return { ...p, left: snapX, top: snapY, locked: false, onBoard: true };
       }
 
-      return next;
+      const localX = Math.max(0, Math.min(piecePageX - trayRect.left, trayRect.width - p.tileW));
+      const localY = Math.max(0, Math.min(piecePageY - trayRect.top, trayRect.height - p.tileH));
+      return { ...p, left: localX, top: localY, locked: false, onBoard: false };
     });
+
+    // ✅ Now we can check synchronously before setPieces
+    const justSolved = nextPieces.every(p => p.locked);
+
+    setPieces(nextPieces); // ✅ pass result directly, no updater function needed
+
+    if (justSolved) {
+      setMessage('Puzlė sudėta sėkmingai!');
+      setSolved(true);
+
+      const user_ID = 1; // replace with localStorage
+      const PUZZLE_ID = 1; // replace with real puzzleId
+
+      fetch(`http://localhost:5192/api/completiontoken/issue`, {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({ userId: user_ID, puzzleId: PUZZLE_ID }),
+      })
+      .then(res => res.json())
+      .then(data => setDiscountToken(data.token))
+      .catch(err => console.error('Failed to issue token:', err));
+    }
 
     setFloater(null);
   };
@@ -326,18 +321,18 @@ export default function CheckOutPage() {
               setRewardClaimed(true);
               alert('Prizas atsiimtas! Jūsų profilis papildytas 5% nuolaidos žetonu, jį galite panaudoti kitam apsipirkimui.');
             }}
-            disabled={rewardClaimed}
-            style={{
-              padding: '8px 16px',
-              background: rewardClaimed ? '#9ca3af' : '#16a34a',
-              color: '#fff',
-              border: 'none',
-              borderRadius: 6,
-              cursor: rewardClaimed ? 'not-allowed' : 'pointer',
-              fontWeight: 600,
-            }}
+              disabled={rewardClaimed || !discountToken}  // disabled until token arrives
+              style={{
+                  padding: '8px 16px',
+                  background: (rewardClaimed || !discountToken) ? '#9ca3af' : '#16a34a',
+                  color: '#fff',
+                  border: 'none',
+                  borderRadius: 6,
+                  cursor: (rewardClaimed || !discountToken) ? 'not-allowed' : 'pointer',
+                  fontWeight: 600,
+              }}
           >
-            {rewardClaimed ? 'Prizas jau atsiimtas' : 'Atsiimti prizą'}
+              {rewardClaimed ? 'Prizas jau atsiimtas' : !discountToken ? 'Kraunama...' : 'Atsiimti prizą'}
           </button>
         </div>
       )}

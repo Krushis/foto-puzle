@@ -14,6 +14,8 @@ namespace FotoPuzleBackend.Data
         public DbSet<Photo> Photos => Set<Photo>();
         public DbSet<Puzzle> Puzzles => Set<Puzzle>();
 
+        public DbSet<CompletionToken> CompletionTokens => Set<CompletionToken>();
+
         protected override void OnModelCreating(ModelBuilder modelBuilder)
         {
             // Store enums as strings so the DB is readable
@@ -29,7 +31,7 @@ namespace FotoPuzleBackend.Data
                 .Property(p => p.Status)
                 .HasConversion<string>();
 
-            // One photo can't have two puzzles of the same difficulty
+            // One photo can't have two puzzles of the same difficulty ??????????????
             modelBuilder.Entity<Puzzle>()
                 .HasIndex(p => new { p.PhotoId, p.Difficulty })
                 .IsUnique();
@@ -40,6 +42,17 @@ namespace FotoPuzleBackend.Data
 
             modelBuilder.Entity<Puzzle>()
                 .HasIndex(p => p.UserId);
+
+            modelBuilder.Entity<CompletionToken>()
+                .HasIndex(ct => ct.PuzzleId)
+                .IsUnique();
+
+            modelBuilder.Entity<CompletionToken>()
+                .HasIndex(ct => ct.Token)
+                .IsUnique();
+
+            modelBuilder.Entity<CompletionToken>()
+                .HasIndex(ct => ct.UserId);
         }
     }
 }
