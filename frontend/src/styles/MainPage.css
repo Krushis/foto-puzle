@@ -1,97 +1,95 @@
-/* Centruojame viską per vidurį */
-
-body{
-  overflow: hidden;
+body {
+    margin: 0;
+    font-family: Arial, sans-serif;
 }
 
 .main-container {
-  position: relative; /* add this line */
-  display: flex;
-  flex-direction: column;
-  justify-content: center;
-  align-items: center;
-  height: 100vh;
-  background: linear-gradient(to right, #f5f7fa, #c3cfe2);
-  font-family: 'Arial', sans-serif;
-  text-align: center;
-  padding: 20px;
-}
-
-/* Pagrindinis pavadinimas */
-.main-container h1 {
-  font-size: 4rem;
-  color: #2c3e50;
-  margin-bottom: 20px;
-  letter-spacing: 2px;
-}
-
-/* Trumpas aprašymas */
-.main-container p {
-  font-size: 1.5rem;
-  color: #555;
-  max-width: 600px;
-  line-height: 1.5;
-}
-
-.register-button,
-.login-button,
-.logout-button {
-    margin-top: 0;
-    padding: 14px 28px;
-    font-size: 1.2rem;
-    font-weight: bold;
-    color: white;
-    background-color: #2c3e50;
-    border: none;
-    border-radius: 12px;
-    cursor: pointer;
-    transition: all 0.25s ease;
-}
-
-.register-button:hover,
-.login-button:hover,
-.logout-button:hover {
-    background-color: #1f2d3a;
-    transform: translateY(-2px);
-    box-shadow: 0 6px 12px rgba(0, 0, 0, 0.15);
-}
-
-.register-button:active,
-.login-button:active,
-.logout-button:active {
-    transform: translateY(0px);
-    box-shadow: none;
-}
-
-.button-group {
+    min-height: calc(100vh - 70px);
+    background: linear-gradient(to right, #f5f7fa, #c3cfe2);
     display: flex;
-    gap: 32px;
-    margin-top: 24px;
     justify-content: center;
-    flex-wrap: wrap;
+    align-items: center;
+    padding: 20px;
+    box-sizing: border-box;
+}
+
+.hero-card {
+    background: white;
+    padding: 40px 32px;
+    border-radius: 18px;
+    box-shadow: 0 8px 24px rgba(0, 0, 0, 0.12);
+    text-align: center;
+    max-width: 700px;
+    width: 100%;
+}
+
+    .hero-card h1 {
+        font-size: 3.5rem;
+        color: #2c3e50;
+        margin-bottom: 20px;
+        letter-spacing: 1px;
+    }
+
+.main-description {
+    font-size: 1.2rem;
+    color: #555;
+    line-height: 1.6;
+    margin: 0 auto 16px;
+    max-width: 600px;
+}
+
+.access-text {
+    font-size: 1rem;
+    color: #3b4d61;
+    margin-bottom: 14px;
 }
 
 .welcome-text {
-    margin-top: 20px;
-    font-size: 22px;
+    margin-top: 10px;
+    font-size: 1.1rem;
     color: #24384d;
     font-weight: 600;
 }
 
-.navbar {
-  position: absolute;
-  top: 20px;
-  right: 24px;
+.button-group {
+    display: flex;
+    justify-content: center;
+    margin-top: 28px;
 }
 
-.profile-icon {
-  background: none;
-  border: none;
-  font-size: 1.8rem;
-  cursor: pointer;
-  transition: transform 0.2s ease;
+.primary-action-button {
+    padding: 12px 22px;
+    font-size: 1rem;
+    font-weight: bold;
+    color: white;
+    background-color: #2c3e50;
+    border: none;
+    border-radius: 10px;
+    cursor: pointer;
+    transition: all 0.25s ease;
 }
 
-.profile-icon:hover {
-  transform: scale(1.2);
+    .primary-action-button:hover {
+        background-color: #1f2d3a;
+        transform: translateY(-2px);
+        box-shadow: 0 6px 12px rgba(0, 0, 0, 0.14);
+    }
+
+    .primary-action-button:active {
+        transform: translateY(0);
+        box-shadow: none;
+    }
+
+@media (max-width: 768px) {
+    .hero-card {
+        padding: 28px 20px;
+    }
+
+        .hero-card h1 {
+            font-size: 2.5rem;
+        }
+
+    .main-description {
+        font-size: 1rem;
+    }
 }

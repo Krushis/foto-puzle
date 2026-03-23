@@ -1,4 +1,4 @@
-import React, { useState } from "react";
+﻿import React, { useState } from "react";
 import { useNavigate } from "react-router-dom";
 import "../styles/LoginPage.css";
 
@@ -32,7 +32,7 @@ function LoginPage() {
                 localStorage.setItem("user", JSON.stringify(data.user));
                 navigate("/");
             } else {
-                setError(data.message || "Prisijungti nepavyko");
+                setError(data.message || "Prisijungimas nepavyko");
             }
         } catch {
             setError("Nepavyko prisijungti prie serverio");
@@ -41,12 +41,12 @@ function LoginPage() {
 
     return (
         <div className="login-container">
-            <h1>Prisijungti</h1>
+            <h1>Prisijungimas</h1>
 
             <form className="login-form" onSubmit={handleLogin}>
                 <input
                     type="email"
-                    placeholder="El. pastas"
+                    placeholder="El. paštas"
                     value={email}
                     onChange={(e) => setEmail(e.target.value)}
                     required
@@ -54,7 +54,7 @@ function LoginPage() {
 
                 <input
                     type="password"
-                    placeholder="Slaptazodis"
+                    placeholder="Slaptažodis"
                     value={password}
                     onChange={(e) => setPassword(e.target.value)}
                     required
@@ -64,7 +64,6 @@ function LoginPage() {
 
                 <button type="submit">Prisijungti</button>
             </form>
-
         </div>
     );
 }
