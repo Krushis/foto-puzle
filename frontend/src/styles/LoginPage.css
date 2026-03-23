@@ -6,6 +6,7 @@
     align-items: center;
     background: #d9dee8;
     padding: 20px;
+    box-sizing: border-box;
 }
 
     .login-container h1 {
@@ -20,6 +21,10 @@
     width: 100%;
     max-width: 380px;
     gap: 15px;
+    background: white;
+    padding: 28px;
+    border-radius: 16px;
+    box-shadow: 0 8px 22px rgba(0, 0, 0, 0.08);
 }
 
     .login-form input {
@@ -50,10 +55,4 @@
     font-size: 15px;
     margin: 0;
     text-align: center;
-}
-
-.dummy-info {
-    margin-top: 20px;
-    color: #24384d;
-    font-size: 14px;
 }

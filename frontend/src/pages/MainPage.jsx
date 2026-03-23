@@ -6,54 +6,37 @@ function MainPage() {
     const navigate = useNavigate();
     const isLoggedIn = localStorage.getItem("isLoggedIn") === "true";
     const user = JSON.parse(localStorage.getItem("user") || "null");
-    const userName = user?.username || "";
-
-    const handleLogout = () => {
-        localStorage.removeItem("isLoggedIn");
-        localStorage.removeItem("user");
-        navigate("/");
-        window.location.reload();
-    };
+    const userName = user?.username || "Vartotojas";
 
     return (
-        <>
-            
-
-            <div className="main-container">
-                <div className="navbar">
-                    {isLoggedIn && (
-                        <button className="profile-icon" onClick={() => navigate("/profile")}>
-                            👤
-                        </button>
-                    )}
-                </div>
+        <div className="main-container">
+            <div className="hero-card">
                 <h1>Foto-Puzlė</h1>
-                <p>
-                    Užsisakykite savo unikalią dėlionę iš bet kurios nuotraukos!
-                    Tai puiki dovana arba linksmas projektas šeimai ir draugams.
+                <p className="main-description">
+                    Paverskite savo mėgstamą nuotrauką unikalia dėlione.
+                    Sukurkite smagią ir įsimintiną dovaną sau, draugams ar šeimai.
                 </p>
-                {isLoggedIn && <p className="welcome-text">Sveiki, {userName}!</p>}
+
+                <p className="access-text">
+                    Šis puslapis prieinamas tiek svečiams, tiek prisijungusiems vartotojams.
+                </p>
+
+                {isLoggedIn ? (
+                    <p className="welcome-text">Sveiki sugrįžę, {userName}!</p>
+                ) : (
+                    <p className="welcome-text">Sveiki, svečias!</p>
+                )}
+
                 <div className="button-group">
-                    {!isLoggedIn ? (
-                        <>
-                            <button className="register-button" onClick={() => navigate("/register")}>
-                                Registruotis
-                            </button>
-                            <button className="login-button" onClick={() => navigate("/login")}>
-                                Prisijungti
-                            </button>
-                            <button className="checkout-button" onClick={() => navigate("/checkout")}>
-                                Temp checkout button
-                            </button>
-                        </>
-                    ) : (
-                        <button className="logout-button" onClick={handleLogout}>
-                            Atsijungti
-                        </button>
-                    )}
+                    <button
+                        className="primary-action-button"
+                        onClick={() => navigate("/checkout")}
+                    >
+                        Pradėti kurti dėlionę
+                    </button>
                 </div>
             </div>
-        </>
+        </div>
     );
 }
 
