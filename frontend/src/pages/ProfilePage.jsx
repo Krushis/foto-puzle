@@ -16,7 +16,7 @@ function ProfilePage() {
     }
 
     //fetch(`http://localhost:5192/api/user/${userId}`) - hardcoded value
-    fetch(`http://localhost:5192/api/user/1`) // fix this later
+    fetch(`http://localhost:5192/api/user/${user.id}`) // ✅  // fix this later
       .then((res) => {
         if (!res.ok) throw new Error("Failed to load profile");
         return res.json();
