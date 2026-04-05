@@ -1,6 +1,70 @@
-@FotoPuzleBackend_HostAddress = http://localhost:5192
+@baseUrl = http://localhost:5192
 
-GET {{FotoPuzleBackend_HostAddress}}/registration/
+### =====================
+### AUTH
+### =====================
+
+# Successful login
+POST {{baseUrl}}/api/auth/login
+Content-Type: application/json
+
+{
+  "email": "rapolas@mail.com",
+"password": "testpassword"
+}
+
+###
+
+# Failed login (wrong password) - should return 401 + warning log
+POST {{baseUrl}}/api/auth/login
+Content-Type: application/json
+
+{
+  "email": "test@example.com",
+  "password": "wrongpassword"
+}
+
+###
+
+### =====================
+### USER
+### =====================
+
+# Get profile for existing user (change id to a real one in your DB)
+GET {{baseUrl}}/api/user/1
+Accept: application/json
+
+###
+
+# Get profile for non-existing user - should return 404 + warning log
+GET {{baseUrl}}/api/user/99999
+Accept: application/json
+
+###
+
+### =====================
+### COMPLETION TOKENS
+### =====================
+
+# Issue a token for a completed puzzle (change userId/puzzleId to real values)
+POST {{baseUrl}}/api/completiontoken/issue
+Content-Type: application/json
+
+{
+  "userId": 1,
+  "puzzleId": 1
+}
+
+###
+
+# Get all tokens for a user
+GET {{baseUrl}}/api/completiontoken/my?userId=1
+Accept: application/json
+
+###
+
+# Validate a token (replace the token value with one returned from the issue request)
+GET {{baseUrl}}/api/completiontoken/validate?userId=1&token=00000000-0000-0000-0000-000000000000
 Accept: application/json
 
 ###
