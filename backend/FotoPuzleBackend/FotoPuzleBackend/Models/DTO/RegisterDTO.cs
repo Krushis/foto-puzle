@@ -11,7 +11,7 @@ namespace FotoPuzleBackend.Models.DTO
         [EmailAddress]
         public string Email { get; set; } = string.Empty;
 
-        public string? Phone { get; set; }
+        //public string? Phone { get; set; }
 
         [Required]
         public string Password { get; set; } = string.Empty;

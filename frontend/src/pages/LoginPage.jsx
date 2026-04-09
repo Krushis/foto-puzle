@@ -1,6 +1,7 @@
 ﻿import React, { useState } from "react";
 import { useNavigate } from "react-router-dom";
 import "../styles/LoginPage.css";
+import LoadingSpinner from "../components/LoadingSpinner";
 
 function LoginPage() {
     const navigate = useNavigate();
@@ -8,10 +9,12 @@ function LoginPage() {
     const [email, setEmail] = useState("");
     const [password, setPassword] = useState("");
     const [error, setError] = useState("");
+    const [loading, setLoading] = useState(false);
 
     const handleLogin = async (e) => {
         e.preventDefault();
         setError("");
+        setLoading(true);
 
         try {
             const response = await fetch("http://localhost:5192/api/auth/login", {
@@ -36,12 +39,19 @@ function LoginPage() {
             }
         } catch {
             setError("Nepavyko prisijungti prie serverio");
+        } finally {
+            setLoading(false); // 🔥 stop loading
         }
     };
 
     return (
         <div className="login-container">
             <h1>Prisijungimas</h1>
+            {loading && (
+            <div className="loader-overlay">
+                <LoadingSpinner size="large" color="white" />
+            </div>
+            )}
 
             <form className="login-form" onSubmit={handleLogin}>
                 <input

@@ -1,18 +1,21 @@
 import React, { useState } from "react";
 import "../styles/RegistrationPage.css";
+import LoadingSpinner from "../components/LoadingSpinner";
 
 function RegistrationPage() {
   const [username, setUsername] = useState("");
   const [email, setEmail] = useState("");
-  const [phone, setPhone] = useState("");
+  //const [phone, setPhone] = useState("");
   const [password, setPassword] = useState("");
   const [message, setMessage] = useState("");
+  const [loading, setLoading] = useState(false);
 
   const handleSubmit = async (e) => {
     e.preventDefault();
+    setLoading(true);
 
     try {
-      const response = await fetch("http://localhost:5192/api/Example/registration", {
+      const response = await fetch("http://localhost:5192/api/auth/register", {
         method: "POST",
         headers: {
           "Content-Type": "application/json"
@@ -20,13 +23,12 @@ function RegistrationPage() {
         body: JSON.stringify({
           username,
           email,
-          phone,
           password
         })
       });
 
       const text = await response.text();
-      const data = text ? JSON.parse(text) : null;
+      const data = text;// ? JSON.parse(text) : null;
 
       if (response.ok) {
         setMessage(data?.message || "Registracija pavyko.");
@@ -36,6 +38,8 @@ function RegistrationPage() {
     } catch (error) {
       console.error("Registration failed:", error);
       setMessage("Įvyko klaida siunčiant duomenis.");
+    } finally {
+      setLoading(false);
     }
   };
 
@@ -59,14 +63,14 @@ function RegistrationPage() {
           onChange={(e) => setEmail(e.target.value)}
           required
         />
-
+        {/*}
         <input
           type="tel"
           placeholder="Telefono numeris (nebūtinas)"
           value={phone}
           onChange={(e) => setPhone(e.target.value)}
         />
-
+          */}
         <input
           type="password"
           placeholder="Slaptažodis"
@@ -75,7 +79,9 @@ function RegistrationPage() {
           required
         />
 
-        <button type="submit">Registruotis</button>
+        <button type="submit" disabled={loading}>
+          {loading ? "Registruojama..." : "Registruotis"}
+        </button>
       </form>
 
       {message && <p className="register-message">{message}</p>}

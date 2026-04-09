@@ -1,4 +1,4 @@
-namespace FotoPuzleBackend.DTO
+namespace FotoPuzleBackend.Models.DTO
 {
     public class LoginDTO
     {
