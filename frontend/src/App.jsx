@@ -7,6 +7,7 @@ import MainPage from "./pages/MainPage";
 import CheckOutPage from "./pages/CheckOutPage";
 import RegistrationPage from "./pages/RegistrationPage";
 import LoginPage from "./pages/LoginPage";
+import LoadingSpinner from "./components/LoadingSpinner";
 
 function App() {
     return (

@@ -18,6 +18,9 @@ namespace FotoPuzleBackend.Models.Entities
         [Required]
         public string PasswordHash { get; set; } = string.Empty;
 
+        //[MaxLength(20)]
+        //public string? Phone { get; set; }
+        
         public DateTime CreatedAt { get; set; } = DateTime.UtcNow;
         public DateTime? UpdatedAt { get; set; }
 

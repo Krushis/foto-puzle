@@ -2,11 +2,13 @@
 import { useEffect, useState } from "react";
 import { useNavigate } from "react-router-dom";
 import "../styles/ProfilePage.css";
+import LoadingSpinner from "../components/LoadingSpinner";
 
 function ProfilePage() {
   const [profile, setProfile] = useState(null);
   const [error, setError] = useState("");
   const navigate = useNavigate();
+  const [loading, setLoading] = useState(true);
 
   useEffect(() => {
     const user = JSON.parse(localStorage.getItem("user") || "null");
@@ -21,12 +23,19 @@ function ProfilePage() {
         if (!res.ok) throw new Error("Failed to load profile");
         return res.json();
       })
-      .then(setProfile)
-      .catch(() => setError("Could not load profile."));
+      .then((data) => {
+        setProfile(data);
+        setLoading(false);
+      })
+      .catch(() => {
+        setError("Could not load profile.");
+        setLoading(false);
+      });
   }, [navigate]);
 
   if (error) return <p>{error}</p>;
-  if (!profile) return <p>Loading...</p>;
+  //if (!profile) return <p>Loading...</p>;
+  if (loading) return <LoadingSpinner size="large" color="black" />;
 
     return (
     <div className="profile-page">
