@@ -3,9 +3,6 @@ using FotoPuzleBackend.Models.Entities;
 
 namespace FotoPuzleBackend.Data
 {
-    /// <summary>
-    /// Represents the application's database context for managing entity objects and database operations.
-    /// </summary>
     public class AppDbContext : DbContext
     {
         public AppDbContext(DbContextOptions<AppDbContext> options) : base(options) { }
@@ -13,12 +10,11 @@ namespace FotoPuzleBackend.Data
         public DbSet<User> Users => Set<User>();
         public DbSet<Photo> Photos => Set<Photo>();
         public DbSet<Puzzle> Puzzles => Set<Puzzle>();
-
+        public DbSet<Order> Orders => Set<Order>();
         public DbSet<CompletionToken> CompletionTokens => Set<CompletionToken>();
 
         protected override void OnModelCreating(ModelBuilder modelBuilder)
         {
-            // Store enums as strings so the DB is readable
             modelBuilder.Entity<Photo>()
                 .Property(p => p.Status)
                 .HasConversion<string>();
@@ -31,17 +27,25 @@ namespace FotoPuzleBackend.Data
                 .Property(p => p.Status)
                 .HasConversion<string>();
 
-            // One photo can't have two puzzles of the same difficulty ??????????????
+            modelBuilder.Entity<Order>()
+                .Property(o => o.Status)
+                .HasConversion<string>();
+
             modelBuilder.Entity<Puzzle>()
                 .HasIndex(p => new { p.PhotoId, p.Difficulty })
                 .IsUnique();
 
-            // Indexes
             modelBuilder.Entity<Photo>()
                 .HasIndex(p => p.UserId);
 
             modelBuilder.Entity<Puzzle>()
                 .HasIndex(p => p.UserId);
+
+            modelBuilder.Entity<Order>()
+                .HasIndex(o => o.UserId);
+
+            modelBuilder.Entity<Order>()
+                .HasIndex(o => o.PuzzleId);
 
             modelBuilder.Entity<CompletionToken>()
                 .HasIndex(ct => ct.PuzzleId)
