@@ -26,7 +26,7 @@ namespace FotoPuzleBackend.Controllers
                 message = "Registracija sėkmingai gauta!",
                 username = dto.Username,
                 email = dto.Email,
-                phone = dto.Phone
+                //phone = dto.Phone
             });
         }
     }

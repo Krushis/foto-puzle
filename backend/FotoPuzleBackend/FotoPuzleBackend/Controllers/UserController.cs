@@ -18,7 +18,6 @@ namespace FotoPuzleBackend.Controllers
             _logger = logger;
         }
 
-        // GET api/user/{id}
         [HttpGet("{id}")]
         public async Task<ActionResult<UserProfileDTO>> GetProfile(int id)
         {
@@ -35,7 +34,6 @@ namespace FotoPuzleBackend.Controllers
                 return NotFound($"User with id {id} was not found.");
             }
 
-            _logger.LogInformation("Returning profile for user {UserId} ({Username})", user.Id, user.Username);
             var profile = new UserProfileDTO
             {
                 Id = user.Id,
@@ -48,6 +46,29 @@ namespace FotoPuzleBackend.Controllers
             };
 
             return Ok(profile);
+        }
+
+        [HttpGet("{id}/puzzles")]
+        public async Task<IActionResult> GetUserPuzzles(int id)
+        {
+            var puzzles = await _context.Puzzles
+                .Include(p => p.Photo)
+                .Where(p => p.UserId == id)
+                .OrderByDescending(p => p.CreatedAt)
+                .Select(p => new
+                {
+                    puzzleId = p.Id,
+                    photoId = p.PhotoId,
+                    difficulty = p.Difficulty.ToString(),
+                    pieceCount = p.PieceCount,
+                    status = p.Status.ToString(),
+                    originalFilename = p.Photo.OriginalFilename,
+                    filePath = p.Photo.FilePath,
+                    createdAt = p.CreatedAt
+                })
+                .ToListAsync();
+
+            return Ok(puzzles);
         }
     }
 }
