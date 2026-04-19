@@ -1,4 +1,5 @@
 ﻿using FotoPuzleBackend.Services;
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 
 namespace FotoPuzleBackend.Controllers
@@ -17,6 +18,7 @@ namespace FotoPuzleBackend.Controllers
         }
 
         // POST /api/completiontoken/issue
+        [Authorize]
         [HttpPost("issue")]
         public async Task<IActionResult> Issue([FromBody] IssueTokenRequest request)
         {
@@ -35,6 +37,7 @@ namespace FotoPuzleBackend.Controllers
         }
 
         // GET /api/completiontoken/my?userId=1
+        [Authorize]
         [HttpGet("my")]
         public async Task<IActionResult> GetMyTokens([FromQuery] int userId)
         {
@@ -45,6 +48,7 @@ namespace FotoPuzleBackend.Controllers
         }
 
         // GET /api/completiontoken/validate?userId=1&token=<guid>
+        [Authorize]
         [HttpGet("validate")]
         public async Task<IActionResult> Validate([FromQuery] int userId, [FromQuery] string token)
         {

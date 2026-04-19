@@ -82,6 +82,9 @@ namespace FotoPuzleBackend.Controllers
         }
     }
 
+    /// <summary>
+    /// Siaip nx mes dedam sita i controlleri kai jau yra DTO folderis? :DDD
+    /// </summary>
     public class CreatePuzzleDTO
     {
         public int UserId { get; set; }

@@ -1,6 +1,7 @@
 using FotoPuzleBackend.Data;
 using FotoPuzleBackend.Models.DTO;
 using FotoPuzleBackend.Models.Entities;
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
 
@@ -19,6 +20,7 @@ namespace FotoPuzleBackend.Controllers
             _logger = logger;
         }
 
+        [Authorize]
         [HttpPost]
         public async Task<IActionResult> CreateOrder([FromBody] CreateOrderDTO dto)
         {

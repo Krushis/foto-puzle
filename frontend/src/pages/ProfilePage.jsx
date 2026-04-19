@@ -2,6 +2,8 @@ import { useEffect, useState } from "react";
 import { useNavigate } from "react-router-dom";
 import "../styles/ProfilePage.css";
 import LoadingSpinner from "../components/LoadingSpinner";
+import { auth } from "../utils/auth";
+import { apiFetch } from "../utils/api";
 
 function ProfilePage() {
     const [profile, setProfile] = useState(null);
@@ -11,7 +13,7 @@ function ProfilePage() {
     const [loading, setLoading] = useState(true);
 
     useEffect(() => {
-        const user = JSON.parse(localStorage.getItem("user") || "null");
+        const user = auth.getUser();
 
         if (!user) {
             navigate("/");
@@ -34,8 +36,8 @@ function ProfilePage() {
         }
 
         Promise.all([
-            fetch(`http://localhost:5192/api/user/${user.id}`),
-            fetch(`http://localhost:5192/api/user/${user.id}/puzzles`)
+            apiFetch(`/api/user/${user.userId}`),
+            apiFetch(`/api/user/${user.userId}/puzzles`)
         ])
             .then(async ([profileRes, puzzlesRes]) => {
                 if (!profileRes.ok || !puzzlesRes.ok) {

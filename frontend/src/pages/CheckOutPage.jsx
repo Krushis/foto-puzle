@@ -1,4 +1,6 @@
 import React, { useState, useRef } from "react";
+import { auth } from "../utils/auth";
+import { apiFetch } from "../utils/api";
 
 const MAX_BOARD_SIZE = 480;
 
@@ -231,64 +233,49 @@ export default function CheckOutPage() {
         setFloater({ id: drag.current.id, pageX: e.clientX, pageY: e.clientY });
     };
 
-    const savePuzzleAndIssueToken = async () => {
-        const user = JSON.parse(localStorage.getItem("user") || "null");
+   const savePuzzleAndIssueToken = async () => {
+        const user = auth.getUser();
+        console.log("USER FROM TOKEN:", user); // 👈 add this
         if (!user) return;
 
         try {
-            const createPuzzleResponse = await fetch(
-                "http://localhost:5192/api/puzzle/create",
-                {
-                    method: "POST",
-                    headers: {
-                        "Content-Type": "application/json",
-                    },
-                    body: JSON.stringify({
-                        userId: user.id,
-                        pieceCount: selectedCount,
-                        originalFilename: uploadedFileName || "uploaded-image.jpg",
-                    }),
-                }
-            );
-
+            const createPuzzleResponse = await apiFetch("/api/puzzle/create", {
+                method: "POST",
+                body: JSON.stringify({
+                    userId: user.userId,
+                    pieceCount: selectedCount,
+                    originalFilename: uploadedFileName || "uploaded-image.jpg",
+                }),
+            });
+            
             const createPuzzleText = await createPuzzleResponse.text();
             let createPuzzleData = {};
-
             try {
                 createPuzzleData = createPuzzleText ? JSON.parse(createPuzzleText) : {};
             } catch {
                 throw new Error(createPuzzleText || "Nepavyko išsaugoti dėlionės");
             }
-
             if (!createPuzzleResponse.ok) {
                 throw new Error(createPuzzleData.message || "Nepavyko išsaugoti dėlionės");
             }
 
             setCreatedPuzzleId(createPuzzleData.id);
 
-            const tokenResponse = await fetch(
-                "http://localhost:5192/api/completiontoken/issue",
-                {
-                    method: "POST",
-                    headers: {
-                        "Content-Type": "application/json",
-                    },
-                    body: JSON.stringify({
-                        userId: user.id,
-                        puzzleId: createPuzzleData.id,
-                    }),
-                }
-            );
+            const tokenResponse = await apiFetch("/api/completiontoken/issue", {
+                method: "POST",
+                body: JSON.stringify({
+                    userId: user.userId,
+                    puzzleId: createPuzzleData.id,
+                }),
+            });
 
             const tokenText = await tokenResponse.text();
             let tokenData = {};
-
             try {
                 tokenData = tokenText ? JSON.parse(tokenText) : {};
             } catch {
                 throw new Error(tokenText || "Nepavyko sugeneruoti nuolaidos žetono");
             }
-
             if (!tokenResponse.ok) {
                 throw new Error(tokenData.error || "Nepavyko sugeneruoti nuolaidos žetono");
             }
@@ -301,7 +288,7 @@ export default function CheckOutPage() {
     };
 
     const handleOrder = async () => {
-        const user = JSON.parse(localStorage.getItem("user") || "null");
+        const user = auth.getUser();
 
         if (!user) {
             alert("Pirmiausia prisijunkite.");
@@ -322,20 +309,17 @@ export default function CheckOutPage() {
             setOrdering(true);
             setOrderMessage("");
 
-            const response = await fetch("http://localhost:5192/api/order", {
-                method: "POST",
-                headers: {
-                    "Content-Type": "application/json",
-                },
-                body: JSON.stringify({
-                    userId: user.id,
-                    puzzleId: createdPuzzleId,
-                    fullName,
-                    cardNumber,
-                    expiration,
-                    cvv,
-                }),
-            });
+            const response = await apiFetch("/api/order", {
+            method: "POST",
+            body: JSON.stringify({
+                userId: user.userId,
+                puzzleId: createdPuzzleId,
+                fullName,
+                cardNumber,
+                expiration,
+                cvv,
+            }),
+        });
 
             const text = await response.text();
 

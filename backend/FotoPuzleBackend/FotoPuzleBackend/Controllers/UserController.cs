@@ -1,5 +1,6 @@
 ﻿using FotoPuzleBackend.Data;
 using FotoPuzleBackend.Models.DTO;
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
 
@@ -18,6 +19,7 @@ namespace FotoPuzleBackend.Controllers
             _logger = logger;
         }
 
+        [Authorize]
         [HttpGet("{id}")]
         public async Task<ActionResult<UserProfileDTO>> GetProfile(int id)
         {
@@ -48,6 +50,7 @@ namespace FotoPuzleBackend.Controllers
             return Ok(profile);
         }
 
+        [Authorize]
         [HttpGet("{id}/puzzles")]
         public async Task<IActionResult> GetUserPuzzles(int id)
         {

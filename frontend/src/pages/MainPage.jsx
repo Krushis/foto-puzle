@@ -1,11 +1,12 @@
 import React from "react";
 import { useNavigate } from "react-router-dom";
 import "../styles/MainPage.css";
+import { auth } from "../utils/auth";
 
 function MainPage() {
     const navigate = useNavigate();
-    const isLoggedIn = localStorage.getItem("isLoggedIn") === "true";
-    const user = JSON.parse(localStorage.getItem("user") || "null");
+    const isLoggedIn = auth.isLoggedIn();
+    const user = auth.getUser();
     const userName = user?.username || "Vartotojas";
 
     return (

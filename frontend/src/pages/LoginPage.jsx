@@ -2,6 +2,7 @@
 import { useNavigate } from "react-router-dom";
 import "../styles/LoginPage.css";
 import LoadingSpinner from "../components/LoadingSpinner";
+import { auth } from "../utils/auth";
 
 function LoginPage() {
     const navigate = useNavigate();
@@ -31,8 +32,8 @@ function LoginPage() {
             const data = await response.json();
 
             if (response.ok) {
-                localStorage.setItem("isLoggedIn", "true");
-                localStorage.setItem("user", JSON.stringify(data.user));
+                auth.saveToken(data.token); 
+                //localStorage.setItem("user", JSON.stringify(data.user));
                 navigate("/");
             } else {
                 setError(data.message || "Prisijungimas nepavyko");
@@ -40,7 +41,7 @@ function LoginPage() {
         } catch {
             setError("Nepavyko prisijungti prie serverio");
         } finally {
-            setLoading(false); // 🔥 stop loading
+            setLoading(false);
         }
     };
 
