@@ -22,16 +22,18 @@ namespace FotoPuzleBackend.Controllers
         [HttpPost("issue")]
         public async Task<IActionResult> Issue([FromBody] IssueTokenRequest request)
         {
-            _logger.LogInformation("Token issue request for user {UserId}, puzzle {PuzzleId}", request.UserId, request.PuzzleId);
+            var userId = int.Parse(User.FindFirst("userId")!.Value);
+            _logger.LogInformation("Token issue request for user {UserId}, puzzle {PuzzleId}", userId, request.PuzzleId);
+
             try
             {
-                var token = await _tokenService.IssueTokenAsync(request.UserId, request.PuzzleId);
-                _logger.LogInformation("Token issued successfully for user {UserId}, puzzle {PuzzleId}", request.UserId, request.PuzzleId);
+                var token = await _tokenService.IssueTokenAsync(userId, request.PuzzleId);
+                _logger.LogInformation("Token issued successfully for user {UserId}, puzzle {PuzzleId}", userId, request.PuzzleId);
                 return Ok(new { token.Token, token.EarnedAt });
             }
             catch (InvalidOperationException ex)
             {
-                _logger.LogWarning("Token issue failed for user {UserId}, puzzle {PuzzleId}: {Reason}", request.UserId, request.PuzzleId, ex.Message);
+                _logger.LogWarning("Token issue failed for user {UserId}, puzzle {PuzzleId}: {Reason}", userId, request.PuzzleId, ex.Message);
                 return BadRequest(new { error = ex.Message });
             }
         }
@@ -59,7 +61,5 @@ namespace FotoPuzleBackend.Controllers
         }
     }
 
-    // TODO Sprint 3 or 4: remove UserId from here once JWT is wired up,
-    // and read it from claims via User.FindFirst(ClaimTypes.NameIdentifier) instead
-    public record IssueTokenRequest(int UserId, int PuzzleId);
+    public record IssueTokenRequest(int PuzzleId);
 }

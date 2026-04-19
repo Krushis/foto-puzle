@@ -264,7 +264,6 @@ export default function CheckOutPage() {
             const tokenResponse = await apiFetch("/api/completiontoken/issue", {
                 method: "POST",
                 body: JSON.stringify({
-                    userId: user.userId,
                     puzzleId: createPuzzleData.id,
                 }),
             });
