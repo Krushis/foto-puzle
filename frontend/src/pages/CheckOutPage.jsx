@@ -25,6 +25,65 @@ function chooseGrid(count, ratio) {
     return { rows: best.rows, cols: best.cols };
 }
 
+// +1 = tab (knob), -1 = blank (hole), 0 = flat (border edge)
+function buildConnectors(rows, cols) {
+    // hConn[r][c]: bottom connector of piece(r,c), for r < rows-1
+    const hConn = Array.from({ length: rows - 1 }, () =>
+        Array.from({ length: cols }, () => (Math.random() < 0.5 ? 1 : -1))
+    );
+    // vConn[r][c]: right connector of piece(r,c), for c < cols-1
+    const vConn = Array.from({ length: rows }, () =>
+        Array.from({ length: cols - 1 }, () => (Math.random() < 0.5 ? 1 : -1))
+    );
+    return { hConn, vConn };
+}
+
+// k = the cubic bezier constant for a quarter-circle/ellipse approximation
+const K = 0.5523;
+
+// Horizontal edge from (fromX, y) → (toX, y)
+// bumpSign: -1 = protrude up (top edge), +1 = protrude down (bottom edge)
+function hEdge(fromX, y, toX, connector, bumpSign, tabSize) {
+    if (connector === 0) return `L ${toX} ${y} `;
+    const bump = tabSize * connector * bumpSign;
+    const mid  = (fromX + toX) / 2;
+    const s    = Math.sign(toX - fromX); // +1 L→R, -1 R→L
+    const a    = tabSize * 0.55 * s;     // signed horizontal semi-axis (~circle when a ≈ |bump|)
+    return (
+        `L ${mid - a} ${y} ` +
+        `C ${mid - a} ${y + K*bump}, ${mid - K*a} ${y + bump}, ${mid} ${y + bump} ` +
+        `C ${mid + K*a} ${y + bump}, ${mid + a} ${y + K*bump}, ${mid + a} ${y} ` +
+        `L ${toX} ${y} `
+    );
+}
+
+// Vertical edge from (x, fromY) → (x, toY)
+// bumpSign: +1 = protrude right (right edge), -1 = protrude left (left edge)
+function vEdge(x, fromY, toY, connector, bumpSign, tabSize) {
+    if (connector === 0) return `L ${x} ${toY} `;
+    const bump = tabSize * connector * bumpSign;
+    const mid  = (fromY + toY) / 2;
+    const s    = Math.sign(toY - fromY);
+    const a    = tabSize * 0.55 * s;
+    return (
+        `L ${x} ${mid - a} ` +
+        `C ${x + K*bump} ${mid - a}, ${x + bump} ${mid - K*a}, ${x + bump} ${mid} ` +
+        `C ${x + bump} ${mid + K*a}, ${x + K*bump} ${mid + a}, ${x} ${mid + a} ` +
+        `L ${x} ${toY} `
+    );
+}
+
+function puzzlePiecePath(tileW, tileH, connectors, TAB) {
+    const ox = TAB, oy = TAB;
+    const x1 = ox + tileW, y1 = oy + tileH;
+    let d = `M ${ox} ${oy} `;
+    d += hEdge(ox, oy, x1, connectors.top,    -1, TAB); // top: left→right, tab up
+    d += vEdge(x1, oy, y1, connectors.right,  +1, TAB); // right: top→bottom, tab right
+    d += hEdge(x1, y1, ox, connectors.bottom, +1, TAB); // bottom: right→left, tab down
+    d += vEdge(ox, y1, oy, connectors.left,   -1, TAB); // left: bottom→top, tab left
+    return d + 'Z';
+}
+
 function createPieces(imageUrl, rows, cols, boardW, boardH) {
     const tileW = Math.floor(boardW / cols);
     const tileH = Math.floor(boardH / rows);
@@ -35,6 +94,8 @@ function createPieces(imageUrl, rows, cols, boardW, boardH) {
     const scatterW = Math.max(actualBoardW + SCATTER_PAD * 2, 300);
     const scatterH = Math.max(actualBoardH + SCATTER_PAD * 2, 300);
 
+    const { hConn, vConn } = buildConnectors(rows, cols);
+
     const pieces = [];
     for (let r = 0; r < rows; r++) {
         for (let c = 0; c < cols; c++) {
@@ -44,6 +105,13 @@ function createPieces(imageUrl, rows, cols, boardW, boardH) {
             const top =
                 SCATTER_PAD +
                 Math.random() * Math.max(0, scatterH - tileH - SCATTER_PAD * 2);
+
+            const connectors = {
+                top:    r === 0        ? 0 : -hConn[r - 1][c],
+                bottom: r === rows - 1 ? 0 : hConn[r][c],
+                left:   c === 0        ? 0 : -vConn[r][c - 1],
+                right:  c === cols - 1 ? 0 : vConn[r][c],
+            };
 
             pieces.push({
                 id: r * cols + c,
@@ -60,6 +128,7 @@ function createPieces(imageUrl, rows, cols, boardW, boardH) {
                 imageUrl,
                 boardW: actualBoardW,
                 boardH: actualBoardH,
+                connectors,
             });
         }
     }
@@ -701,39 +770,6 @@ export default function CheckOutPage() {
                                 boxShadow: "0 2px 12px rgba(0,0,0,0.15)",
                             }}
                         >
-                            {!solved && (
-                                <>
-                                    {Array.from({ length: boardInfo.rows + 1 }).map((_, i) => (
-                                        <div
-                                            key={`h${i}`}
-                                            style={{
-                                                position: "absolute",
-                                                left: 0,
-                                                right: 0,
-                                                top: i * boardInfo.tileH - 1,
-                                                height: 1,
-                                                background: "rgba(0,0,0,0.15)",
-                                                pointerEvents: "none",
-                                            }}
-                                        />
-                                    ))}
-
-                                    {Array.from({ length: boardInfo.cols + 1 }).map((_, i) => (
-                                        <div
-                                            key={`v${i}`}
-                                            style={{
-                                                position: "absolute",
-                                                top: 0,
-                                                bottom: 0,
-                                                left: i * boardInfo.tileW - 1,
-                                                width: 1,
-                                                background: "rgba(0,0,0,0.15)",
-                                                pointerEvents: "none",
-                                            }}
-                                        />
-                                    ))}
-                                </>
-                            )}
 
                             {boardPieces.map((p) => {
                                 const isFloating = floater?.id === p.id;
@@ -814,38 +850,60 @@ export default function CheckOutPage() {
 }
 
 function PuzzlePiece({ piece, imageUrl, boardW, boardH, onMouseDown, style = {}, solved }) {
-    const { left, top, tileW, tileH, r, c, locked } = piece;
+    const { left: pLeft, top: pTop, tileW, tileH, r, c, locked, connectors } = piece;
+    const TAB = Math.round(Math.min(tileW, tileH) * 0.2);
+    const svgW = tileW + 2 * TAB;
+    const svgH = tileH + 2 * TAB;
+    const clipId = `pc-${piece.id}`;
+    const pathD = puzzlePiecePath(tileW, tileH, connectors, TAB);
 
-    const bgStyle = imageUrl
-        ? {
-            backgroundImage: `url(${imageUrl})`,
-            backgroundSize: `${boardW}px ${boardH}px`,
-            backgroundPosition: `-${c * tileW}px -${r * tileH}px`,
-            backgroundRepeat: "no-repeat",
-        }
-        : { background: locked ? "#86efac" : "#93c5fd" };
+    const { left: sLeft, top: sTop, position: sPos, ...restStyle } = style;
+    const finalLeft = (sLeft !== undefined ? sLeft : pLeft) - TAB;
+    const finalTop  = (sTop  !== undefined ? sTop  : pTop)  - TAB;
+    const finalPos  = sPos || "absolute";
 
     return (
         <div
             onMouseDown={onMouseDown}
             style={{
-                position: "absolute",
-                left,
-                top,
+                position: finalPos,
+                left: finalLeft,
+                top: finalTop,
+                width: svgW,
+                height: svgH,
                 zIndex: locked ? 1 : 10,
-                width: tileW,
-                height: tileH,
-                ...bgStyle,
-                border: solved
-                    ? "none"
-                    : locked
-                        ? "1px solid rgba(0,180,0,0.6)"
-                        : "1.5px solid rgba(0,0,0,0.35)",
-                outline: solved ? "none" : locked ? "1px solid #16a34a" : "none",
-                boxSizing: "border-box",
                 cursor: locked ? "default" : "grab",
-                ...style,
+                ...restStyle,
             }}
-        />
+        >
+            <svg width={svgW} height={svgH} style={{ display: "block", overflow: "visible" }}>
+                <defs>
+                    <clipPath id={clipId}>
+                        <path d={pathD} />
+                    </clipPath>
+                </defs>
+                {imageUrl ? (
+                    <image
+                        href={imageUrl}
+                        x={TAB - c * tileW}
+                        y={TAB - r * tileH}
+                        width={boardW}
+                        height={boardH}
+                        clipPath={`url(#${clipId})`}
+                        preserveAspectRatio="none"
+                    />
+                ) : (
+                    <path d={pathD} fill={locked ? "#86efac" : "#93c5fd"} />
+                )}
+                {locked && !solved && (
+                    <path
+                        d={pathD}
+                        fill="none"
+                        stroke="rgba(0,180,0,0.6)"
+                        strokeWidth={1.5}
+                    />
+                )}
+            </svg>
+        </div>
     );
 }
