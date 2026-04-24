@@ -8,31 +8,22 @@ import { apiFetch } from "../utils/api";
 function ProfilePage() {
     const [profile, setProfile] = useState(null);
     const [puzzles, setPuzzles] = useState([]);
+    const [currentPassword, setCurrentPassword] = useState("");
+    const [newPassword, setNewPassword] = useState("");
+    const [confirmPassword, setConfirmPassword] = useState("");
     const [error, setError] = useState("");
-    const navigate = useNavigate();
+    const [passwordError, setPasswordError] = useState("");
+    const [passwordMessage, setPasswordMessage] = useState("");
     const [loading, setLoading] = useState(true);
+    const [savingPassword, setSavingPassword] = useState(false);
+    const navigate = useNavigate();
 
     useEffect(() => {
         const user = auth.getUser();
 
         if (!user) {
-            navigate("/");
+            navigate("/login");
             return;
-        }
-
-        fetch(`http://localhost:5192/api/user/${user.id}/puzzles`)
-            .then(res => res.json())
-            .then(data => setPuzzles(data));
-
-
-        <h3>Mano dėlionės</h3>
-
-        {
-            puzzles.map(p => (
-                <div key={p.id}>
-                    🧩 {p.pieceCount} dalių – {new Date(p.createdAt).toLocaleDateString()}
-                </div>
-            ))
         }
 
         Promise.all([
@@ -57,37 +48,113 @@ function ProfilePage() {
             });
     }, [navigate]);
 
+    const handlePasswordChange = async (event) => {
+        event.preventDefault();
+        setPasswordError("");
+        setPasswordMessage("");
+
+        if (newPassword.length < 6) {
+            setPasswordError("Naujas slaptažodis turi būti bent 6 simbolių.");
+            return;
+        }
+
+        if (newPassword !== confirmPassword) {
+            setPasswordError("Nauji slaptažodžiai nesutampa.");
+            return;
+        }
+
+        setSavingPassword(true);
+
+        try {
+            const response = await apiFetch(`/api/user/${profile.id}/password`, {
+                method: "PUT",
+                body: JSON.stringify({
+                    currentPassword,
+                    newPassword
+                })
+            });
+
+            const data = await response.json();
+
+            if (!response.ok) {
+                setPasswordError(data.message || "Nepavyko pakeisti slaptažodžio.");
+                return;
+            }
+
+            setPasswordMessage(data.message);
+            setCurrentPassword("");
+            setNewPassword("");
+            setConfirmPassword("");
+
+            window.setTimeout(() => {
+                auth.removeToken();
+                navigate("/login");
+            }, 1200);
+        } catch {
+            setPasswordError("Nepavyko prisijungti prie serverio.");
+        } finally {
+            setSavingPassword(false);
+        }
+    };
+
     if (error) return <p>{error}</p>;
     if (loading) return <LoadingSpinner size="large" color="black" />;
 
     return (
         <div className="profile-page">
             <div className="profile-container">
-                <h1>👤 {profile.username}</h1>
+                <h1>{profile.username}</h1>
                 <p>{profile.email}</p>
                 <p>Narys nuo {new Date(profile.createdAt).toLocaleDateString()}</p>
 
                 <div className="profile-stats">
-                    <span>📷 {profile.totalPhotos} nuotraukos</span>
-                    <span>🧩 {profile.totalPuzzles} dėlionės</span>
+                    <span>{profile.totalPhotos} nuotraukos</span>
+                    <span>{profile.totalPuzzles} dėlionės</span>
                 </div>
 
-                <h2 style={{ marginTop: "24px" }}>Mano sukurtos dėlionės</h2>
+                <form className="password-form" onSubmit={handlePasswordChange}>
+                    <h2>Keisti slaptažodį</h2>
+
+                    <input
+                        type="password"
+                        placeholder="Dabartinis slaptažodis"
+                        value={currentPassword}
+                        onChange={(event) => setCurrentPassword(event.target.value)}
+                        required
+                    />
+
+                    <input
+                        type="password"
+                        placeholder="Naujas slaptažodis"
+                        value={newPassword}
+                        onChange={(event) => setNewPassword(event.target.value)}
+                        required
+                    />
+
+                    <input
+                        type="password"
+                        placeholder="Pakartokite naują slaptažodį"
+                        value={confirmPassword}
+                        onChange={(event) => setConfirmPassword(event.target.value)}
+                        required
+                    />
+
+                    {passwordError && <p className="password-error">{passwordError}</p>}
+                    {passwordMessage && <p className="password-success">{passwordMessage}</p>}
+
+                    <button type="submit" disabled={savingPassword}>
+                        {savingPassword ? "Saugoma..." : "Išsaugoti slaptažodį"}
+                    </button>
+                </form>
+
+                <h2 className="profile-section-title">Mano sukurtos dėlionės</h2>
 
                 {puzzles.length === 0 ? (
                     <p>Kol kas neturite sukurtų dėlionių.</p>
                 ) : (
-                    <div style={{ marginTop: "16px", display: "grid", gap: "16px" }}>
+                    <div className="puzzle-list">
                         {puzzles.map((puzzle) => (
-                            <div
-                                key={puzzle.puzzleId}
-                                style={{
-                                    padding: "16px",
-                                    borderRadius: "10px",
-                                    border: "1px solid #ccc",
-                                    backgroundColor: "#fff"
-                                }}
-                            >
+                            <div key={puzzle.puzzleId} className="puzzle-card">
                                 <p><strong>Dėlionės ID:</strong> {puzzle.puzzleId}</p>
                                 <p><strong>Nuotrauka:</strong> {puzzle.originalFilename}</p>
                                 <p><strong>Sunkumas:</strong> {puzzle.difficulty}</p>
@@ -100,7 +167,7 @@ function ProfilePage() {
                 )}
 
                 <button className="back-button" onClick={() => navigate("/")}>
-                    ← Grįžti į pagrindinį
+                    Grįžti į pagrindinį
                 </button>
             </div>
         </div>

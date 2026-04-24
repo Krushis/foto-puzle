@@ -3,6 +3,7 @@ using FotoPuzleBackend.Models.DTO;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
+using System.Security.Claims;
 
 namespace FotoPuzleBackend.Controllers
 {
@@ -23,6 +24,13 @@ namespace FotoPuzleBackend.Controllers
         [HttpGet("{id}")]
         public async Task<ActionResult<UserProfileDTO>> GetProfile(int id)
         {
+            var authenticatedUserId = GetAuthenticatedUserId();
+            if (authenticatedUserId == null)
+                return Unauthorized();
+
+            if (authenticatedUserId != id)
+                return Forbid();
+
             _logger.LogInformation("Profile request for user {UserId}", id);
 
             var user = await _context.Users
@@ -54,6 +62,13 @@ namespace FotoPuzleBackend.Controllers
         [HttpGet("{id}/puzzles")]
         public async Task<IActionResult> GetUserPuzzles(int id)
         {
+            var authenticatedUserId = GetAuthenticatedUserId();
+            if (authenticatedUserId == null)
+                return Unauthorized();
+
+            if (authenticatedUserId != id)
+                return Forbid();
+
             var puzzles = await _context.Puzzles
                 .Include(p => p.Photo)
                 .Where(p => p.UserId == id)
@@ -72,6 +87,49 @@ namespace FotoPuzleBackend.Controllers
                 .ToListAsync();
 
             return Ok(puzzles);
+        }
+
+        [Authorize]
+        [HttpPut("{id}/password")]
+        public async Task<IActionResult> ChangePassword(int id, [FromBody] ChangePasswordDTO dto)
+        {
+            var authenticatedUserId = GetAuthenticatedUserId();
+            if (authenticatedUserId == null)
+                return Unauthorized();
+
+            if (authenticatedUserId != id)
+                return Forbid();
+
+            if (!ModelState.IsValid)
+                return BadRequest(ModelState);
+
+            if (dto.CurrentPassword == dto.NewPassword)
+                return BadRequest(new { message = "Naujas slaptažodis turi skirtis nuo dabartinio." });
+
+            var user = await _context.Users.FirstOrDefaultAsync(u => u.Id == id);
+            if (user == null)
+                return NotFound($"User with id {id} was not found.");
+
+            if (!BCrypt.Net.BCrypt.Verify(dto.CurrentPassword, user.PasswordHash))
+                return BadRequest(new { message = "Dabartinis slaptažodis neteisingas." });
+
+            user.PasswordHash = BCrypt.Net.BCrypt.HashPassword(dto.NewPassword);
+            user.UpdatedAt = DateTime.UtcNow;
+            await _context.SaveChangesAsync();
+
+            _logger.LogInformation("User {UserId} changed password", id);
+
+            return Ok(new { message = "Slaptažodis pakeistas sėkmingai. Prisijunkite iš naujo." });
+        }
+
+        private int? GetAuthenticatedUserId()
+        {
+            var userIdValue = User.FindFirstValue("userId");
+
+            if (int.TryParse(userIdValue, out var userId))
+                return userId;
+
+            return null;
         }
     }
 }

@@ -1,16 +1,34 @@
-﻿import React from "react";
+import React, { useEffect, useState } from "react";
 import { Link, useNavigate } from "react-router-dom";
 import "../styles/Navbar.css";
 import { auth } from "../utils/auth";
 
 function Navbar() {
     const navigate = useNavigate();
-    const isLoggedIn = auth.isLoggedIn();
+    const [isLoggedIn, setIsLoggedIn] = useState(auth.isLoggedIn());
+
+    useEffect(() => {
+        const syncAuthState = () => {
+            const loggedIn = auth.isLoggedIn();
+            setIsLoggedIn(loggedIn);
+
+            if (!loggedIn && window.location.pathname === "/profile") {
+                navigate("/login");
+            }
+        };
+
+        window.addEventListener("authChanged", syncAuthState);
+        const intervalId = window.setInterval(syncAuthState, 1000);
+
+        return () => {
+            window.removeEventListener("authChanged", syncAuthState);
+            window.clearInterval(intervalId);
+        };
+    }, [navigate]);
 
     const handleLogout = () => {
         auth.removeToken();
         navigate("/");
-        window.location.reload();
     };
 
     return (

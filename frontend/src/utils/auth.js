@@ -1,23 +1,54 @@
 // class for handling jwt authentication
 
-export const auth = {
-  saveToken: (token) => localStorage.setItem("jwt_token", token),
-  getToken: () => localStorage.getItem("jwt_token"),
-  removeToken: () => localStorage.removeItem("jwt_token"),
+const TOKEN_KEY = "jwt_token";
 
-  getUser: () => {
-    const token = localStorage.getItem("jwt_token");
+const notifyAuthChanged = () => {
+  window.dispatchEvent(new Event("authChanged"));
+};
+
+const decodeToken = (token) => {
+  try {
+    return JSON.parse(atob(token.split(".")[1]));
+  } catch {
+    return null;
+  }
+};
+
+export const auth = {
+  saveToken: (token) => {
+    localStorage.setItem(TOKEN_KEY, token);
+    notifyAuthChanged();
+  },
+
+  getToken: () => {
+    const token = localStorage.getItem(TOKEN_KEY);
     if (!token) return null;
-    try {
-      const payload = JSON.parse(atob(token.split(".")[1]));
-      if (payload.exp * 1000 < Date.now()) {
-        auth.removeToken();
-        return null;
-      }
-      return payload;
-    } catch {
+
+    const payload = decodeToken(token);
+    if (!payload || payload.exp * 1000 <= Date.now()) {
+      auth.removeToken();
       return null;
     }
+
+    return token;
+  },
+
+  removeToken: () => {
+    localStorage.removeItem(TOKEN_KEY);
+    notifyAuthChanged();
+  },
+
+  getUser: () => {
+    const token = localStorage.getItem(TOKEN_KEY);
+    if (!token) return null;
+
+    const payload = decodeToken(token);
+    if (!payload || payload.exp * 1000 <= Date.now()) {
+      auth.removeToken();
+      return null;
+    }
+
+    return payload;
   },
 
   isLoggedIn: () => auth.getUser() !== null,
