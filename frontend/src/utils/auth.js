@@ -52,4 +52,6 @@ export const auth = {
   },
 
   isLoggedIn: () => auth.getUser() !== null,
+
+  isAdmin: () => auth.getUser()?.role === "Admin",
 };

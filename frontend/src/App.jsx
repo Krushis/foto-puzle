@@ -7,6 +7,7 @@ import MainPage from "./pages/MainPage";
 import CheckOutPage from "./pages/CheckOutPage";
 import RegistrationPage from "./pages/RegistrationPage";
 import LoginPage from "./pages/LoginPage";
+import AdminPage from "./pages/AdminPage";
 import LoadingSpinner from "./components/LoadingSpinner";
 
 function App() {
@@ -19,6 +20,7 @@ function App() {
                 <Route path="/register" element={<RegistrationPage />} />
                 <Route path="/profile" element={<ProfilePage />} />
                 <Route path="/login" element={<LoginPage />} />
+                <Route path="/admin" element={<AdminPage />} />
             </Routes>
         </BrowserRouter>
     );
