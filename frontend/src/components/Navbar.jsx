@@ -6,11 +6,13 @@ import { auth } from "../utils/auth";
 function Navbar() {
     const navigate = useNavigate();
     const [isLoggedIn, setIsLoggedIn] = useState(auth.isLoggedIn());
+    const [isAdmin, setIsAdmin] = useState(auth.isAdmin());
 
     useEffect(() => {
         const syncAuthState = () => {
             const loggedIn = auth.isLoggedIn();
             setIsLoggedIn(loggedIn);
+            setIsAdmin(auth.isAdmin());
 
             if (!loggedIn && window.location.pathname === "/profile") {
                 navigate("/login");
@@ -53,6 +55,11 @@ function Navbar() {
                         <Link to="/profile" className="navbar-link">
                             Profilis
                         </Link>
+                        {isAdmin && (
+                            <Link to="/admin" className="navbar-link">
+                                Admin
+                            </Link>
+                        )}
                         <button className="navbar-logout" onClick={handleLogout}>
                             Atsijungti
                         </button>

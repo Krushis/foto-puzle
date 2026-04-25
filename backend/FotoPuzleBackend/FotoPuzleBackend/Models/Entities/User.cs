@@ -1,4 +1,5 @@
 ﻿using System.ComponentModel.DataAnnotations;
+using FotoPuzleBackend.Models.Enums;
 
 namespace FotoPuzleBackend.Models.Entities
 {
@@ -18,9 +19,11 @@ namespace FotoPuzleBackend.Models.Entities
         [Required]
         public string PasswordHash { get; set; } = string.Empty;
 
+        public UserRole Role { get; set; } = UserRole.User;
+
         //[MaxLength(20)]
         //public string? Phone { get; set; }
-        
+
         public DateTime CreatedAt { get; set; } = DateTime.UtcNow;
         public DateTime? UpdatedAt { get; set; }
 

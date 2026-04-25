@@ -3,6 +3,7 @@ using System.Security.Claims;
 using System.Text;
 using FotoPuzleBackend.Data;
 using FotoPuzleBackend.Models.DTO;
+using FotoPuzleBackend.Models.Enums;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.IdentityModel.Tokens;
@@ -39,7 +40,7 @@ namespace FotoPuzleBackend.Controllers
             }
 
             // generate JWT token
-            var token = GenerateToken(user.Id, user.Email, user.Username);
+            var token = GenerateToken(user.Id, user.Email, user.Username, user.Role);
 
             _logger.LogInformation("User {UserId} logged in successfully", user.Id);
 
@@ -88,13 +89,14 @@ namespace FotoPuzleBackend.Controllers
         }
 
         // token generator - siaip bloga praktika sita controlleryje laikyti bet px
-        private string GenerateToken(int userId, string email, string username)
+        private string GenerateToken(int userId, string email, string username, UserRole role)
         {
             var claims = new[]
             {
                 new Claim("userId", userId.ToString()),
                 new Claim(ClaimTypes.Email, email),
-                new Claim("username", username)
+                new Claim("username", username),
+                new Claim("role", role.ToString())
             };
 
             var key = new SymmetricSecurityKey(
