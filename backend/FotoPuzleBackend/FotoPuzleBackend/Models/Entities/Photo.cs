@@ -8,6 +8,7 @@ namespace FotoPuzleBackend.Models.Entities
     {
         public int Id { get; set; }
         public int UserId { get; set; }
+        public bool IsPublic { get; set; } = false;
 
         [Required, MaxLength(255)]
         public string OriginalFilename { get; set; } = string.Empty;
@@ -22,6 +23,7 @@ namespace FotoPuzleBackend.Models.Entities
 
         [MaxLength(50)]
         public string MimeType { get; set; } = "image/jpeg";
+
 
         public PhotoStatus Status { get; set; } = PhotoStatus.Pending;
         public DateTime? UploadedAt { get; set; }

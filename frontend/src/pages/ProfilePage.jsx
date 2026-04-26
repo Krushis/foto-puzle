@@ -5,6 +5,8 @@ import LoadingSpinner from "../components/LoadingSpinner";
 import { auth } from "../utils/auth";
 import { apiFetch } from "../utils/api";
 
+const API_BASE_URL = "http://localhost:5192"; // pakeisk į savo backend portą, jei kitas
+
 function ProfilePage() {
     const [profile, setProfile] = useState(null);
     const [puzzles, setPuzzles] = useState([]);
@@ -17,6 +19,12 @@ function ProfilePage() {
     const [loading, setLoading] = useState(true);
     const [savingPassword, setSavingPassword] = useState(false);
     const navigate = useNavigate();
+
+    const getImageUrl = (filePath) => {
+        if (!filePath) return "";
+        if (filePath.startsWith("http")) return filePath;
+        return `${API_BASE_URL}${filePath}`;
+    };
 
     useEffect(() => {
         const user = auth.getUser();
@@ -35,11 +43,8 @@ function ProfilePage() {
                     throw new Error("Failed to load profile");
                 }
 
-                const profileData = await profileRes.json();
-                const puzzlesData = await puzzlesRes.json();
-
-                setProfile(profileData);
-                setPuzzles(puzzlesData);
+                setProfile(await profileRes.json());
+                setPuzzles(await puzzlesRes.json());
                 setLoading(false);
             })
             .catch(() => {
@@ -154,12 +159,28 @@ function ProfilePage() {
                 ) : (
                     <div className="puzzle-list">
                         {puzzles.map((puzzle) => (
-                            <div key={puzzle.puzzleId} className="puzzle-card">
+                            <div
+                                key={puzzle.puzzleId}
+                                className="puzzle-card"
+                                onClick={() => navigate(`/puzzle/${puzzle.puzzleId}`)}
+                                style={{ cursor: "pointer" }}
+                            >
+                                {puzzle.filePath && (
+                                    <img
+                                        src={`http://localhost:5192${puzzle.filePath}`}
+                                        alt={puzzle.originalFilename}
+                                        className="profile-puzzle-image"
+                                    />
+                                )}
+
                                 <p><strong>Dėlionės ID:</strong> {puzzle.puzzleId}</p>
                                 <p><strong>Nuotrauka:</strong> {puzzle.originalFilename}</p>
                                 <p><strong>Sunkumas:</strong> {puzzle.difficulty}</p>
                                 <p><strong>Detalių skaičius:</strong> {puzzle.pieceCount}</p>
                                 <p><strong>Statusas:</strong> {puzzle.status}</p>
+                                {puzzle.aspectRatio && (
+                                    <p><strong>Santykis:</strong> {puzzle.aspectRatio}</p>
+                                )}
                                 <p><strong>Sukurta:</strong> {new Date(puzzle.createdAt).toLocaleDateString()}</p>
                             </div>
                         ))}

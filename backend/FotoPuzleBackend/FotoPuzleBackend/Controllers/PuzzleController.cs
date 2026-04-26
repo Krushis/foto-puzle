@@ -1,6 +1,8 @@
 using FotoPuzleBackend.Data;
 using FotoPuzleBackend.Models.Entities;
 using Microsoft.AspNetCore.Mvc;
+using FotoPuzleBackend.Models.DTO;  
+using Microsoft.EntityFrameworkCore;
 
 namespace FotoPuzleBackend.Controllers
 {
@@ -18,7 +20,7 @@ namespace FotoPuzleBackend.Controllers
         }
 
         [HttpPost("create")]
-        public async Task<IActionResult> Create([FromBody] CreatePuzzleDTO dto)
+        public async Task<IActionResult> Create([FromForm] CreatePuzzleDTO dto)
         {
             try
             {
@@ -28,17 +30,43 @@ namespace FotoPuzleBackend.Controllers
                     return NotFound(new { message = "User not found" });
                 }
 
-                var storedFilename = $"{Guid.NewGuid()}.jpg";
+                if (dto.Image == null || dto.Image.Length == 0)
+                {
+                    return BadRequest(new { message = "Image is required" });
+                }
+
+                var uploadsFolder = Path.Combine(
+                    Directory.GetCurrentDirectory(),
+                    "wwwroot",
+                    "uploads"
+                );
+
+                Directory.CreateDirectory(uploadsFolder);
+
+                var extension = Path.GetExtension(dto.Image.FileName);
+                if (string.IsNullOrWhiteSpace(extension))
+                {
+                    extension = ".jpg";
+                }
+
+                var storedFilename = $"{Guid.NewGuid()}{extension}";
+                var physicalPath = Path.Combine(uploadsFolder, storedFilename);
+
+                using (var stream = new FileStream(physicalPath, FileMode.Create))
+                {
+                    await dto.Image.CopyToAsync(stream);
+                }
 
                 var photo = new Photo
                 {
                     UserId = dto.UserId,
                     OriginalFilename = string.IsNullOrWhiteSpace(dto.OriginalFilename)
-                        ? "uploaded-image.jpg"
+                        ? dto.Image.FileName
                         : dto.OriginalFilename,
                     StoredFilename = storedFilename,
                     FilePath = $"/uploads/{storedFilename}",
-                    MimeType = "image/jpeg",
+                    FileSizeBytes = dto.Image.Length,
+                    MimeType = dto.Image.ContentType,
                     Status = PhotoStatus.Ready,
                     UploadedAt = DateTime.UtcNow,
                     CreatedAt = DateTime.UtcNow
@@ -54,16 +82,12 @@ namespace FotoPuzleBackend.Controllers
                     PieceCount = dto.PieceCount,
                     Difficulty = DifficultyLevel.Medium,
                     Status = PuzzleStatus.Ready,
-                    CreatedAt = DateTime.UtcNow
+                    CreatedAt = DateTime.UtcNow,
+                    AspectRatio = dto.AspectRatio
                 };
 
                 _context.Puzzles.Add(puzzle);
                 await _context.SaveChangesAsync();
-
-                _logger.LogInformation(
-                    "Created puzzle {PuzzleId} with photo {PhotoId} for user {UserId}",
-                    puzzle.Id, photo.Id, dto.UserId
-                );
 
                 return Ok(new
                 {
@@ -71,6 +95,7 @@ namespace FotoPuzleBackend.Controllers
                     userId = puzzle.UserId,
                     photoId = photo.Id,
                     pieceCount = puzzle.PieceCount,
+                    aspectRatio = puzzle.AspectRatio,
                     createdAt = puzzle.CreatedAt
                 });
             }
@@ -80,15 +105,29 @@ namespace FotoPuzleBackend.Controllers
                 return StatusCode(500, new { message = ex.Message });
             }
         }
-    }
+        [HttpGet("{id}")]
+        public async Task<IActionResult> GetPuzzle(int id)
+        {
+            var puzzle = await _context.Puzzles
+                .Include(p => p.Photo)
+                .Where(p => p.Id == id)
+                .Select(p => new
+                {
+                    puzzleId = p.Id,
+                    photoId = p.PhotoId,
+                    userId = p.UserId,
+                    pieceCount = p.PieceCount,
+                    aspectRatio = p.AspectRatio,
+                    filePath = p.Photo.FilePath,
+                    originalFilename = p.Photo.OriginalFilename,
+                    status = p.Status.ToString()
+                })
+                .FirstOrDefaultAsync();
 
-    /// <summary>
-    /// Siaip nx mes dedam sita i controlleri kai jau yra DTO folderis? :DDD
-    /// </summary>
-    public class CreatePuzzleDTO
-    {
-        public int UserId { get; set; }
-        public int PieceCount { get; set; }
-        public string? OriginalFilename { get; set; }
+            if (puzzle == null)
+                return NotFound();
+
+            return Ok(puzzle);
+        }
     }
 }

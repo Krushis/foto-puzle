@@ -177,3 +177,13 @@
   transform: translateY(0px);
   box-shadow: none;
 }
+
+.profile-puzzle-image {
+    width: 100%;
+    max-width: 320px;
+    height: 180px;
+    object-fit: cover;
+    border-radius: 10px;
+    margin-bottom: 12px;
+    border: 1px solid #d1d5db;
+}

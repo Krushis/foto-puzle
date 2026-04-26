@@ -123,6 +123,9 @@ namespace FotoPuzleBackend.Migrations
                     b.Property<long?>("FileSizeBytes")
                         .HasColumnType("bigint");
 
+                    b.Property<bool>("IsPublic")
+                        .HasColumnType("tinyint(1)");
+
                     b.Property<string>("MimeType")
                         .IsRequired()
                         .HasMaxLength(50)
@@ -165,6 +168,10 @@ namespace FotoPuzleBackend.Migrations
                         .HasColumnType("int");
 
                     MySqlPropertyBuilderExtensions.UseMySqlIdentityColumn(b.Property<int>("Id"));
+
+                    b.Property<string>("AspectRatio")
+                        .IsRequired()
+                        .HasColumnType("longtext");
 
                     b.Property<DateTime>("CreatedAt")
                         .HasColumnType("datetime(6)");
