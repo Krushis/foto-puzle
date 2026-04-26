@@ -1,6 +1,8 @@
 import React, { useState } from "react";
 import "../styles/RegistrationPage.css";
 import LoadingSpinner from "../components/LoadingSpinner";
+import { apiFetch } from "../utils/api";
+
 
 function RegistrationPage() {
   const [username, setUsername] = useState("");
@@ -15,7 +17,7 @@ function RegistrationPage() {
     setLoading(true);
 
     try {
-      const response = await fetch("http://localhost:5192/api/auth/register", {
+      const response = await apiFetch("/api/auth/register", {
         method: "POST",
         headers: {
           "Content-Type": "application/json"

@@ -2,7 +2,7 @@
 
 import { auth } from "./auth";
 
-const BASE_URL = "http://localhost:5192";
+const BASE_URL = ""; // this we get from vite config
 
 export const apiFetch = async (path, options = {}) => {
   const token = auth.getToken();
