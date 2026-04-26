@@ -122,6 +122,41 @@ namespace FotoPuzleBackend.Controllers
             return Ok(new { message = "Slaptažodis pakeistas sėkmingai. Prisijunkite iš naujo." });
         }
 
+        /// <summary>
+        /// Retrieves the list of orders for the specified user.
+        /// </summary>
+        /// <remarks>This endpoint requires authentication. Only the authenticated user can access their
+        /// own orders; requests for other users' orders will be denied.</remarks>
+        /// <param name="id">The unique identifier of the user whose orders are to be retrieved.</param>
+        /// <returns>An <see cref="IActionResult"/> containing a list of the user's orders if the request is authorized;
+        /// otherwise, an appropriate error response such as Unauthorized or Forbid.</returns>
+        [Authorize]
+        [HttpGet("{id}/orders")]
+        public async Task<IActionResult> GetUserOrders(int id)
+        {
+            var authenticatedUserId = GetAuthenticatedUserId();
+            if (authenticatedUserId == null)
+                return Unauthorized("User does not have authorization for this method");
+
+            if (authenticatedUserId != id)
+                return Forbid("User is forbidden from accessing this method");
+
+            var orders = await _context.Orders
+                .Where(o => o.UserId == id)
+                .OrderByDescending(o => o.CreatedAt)
+                .Select(o => new
+                {
+                    orderId = o.Id,
+                    puzzleId = o.PuzzleId,
+                    fullName = o.FullName,
+                    amount = o.Amount,
+                    status = o.Status.ToString(),
+                    createdAt = o.CreatedAt
+                })
+                .ToListAsync();
+            return Ok(orders);
+        }
+
         private int? GetAuthenticatedUserId()
         {
             var userIdValue = User.FindFirstValue("userId");

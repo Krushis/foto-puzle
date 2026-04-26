@@ -5,66 +5,6 @@
     {
       "AbsoluteMoniker": "D:0:0:{3AA8CC96-B11E-741B-190B-C6E9C830E219}|FotoPuzleBackend\\FotoPuzleBackend.csproj|c:\\users\\lukas\\documents\\programming\\foto-puzle\\foto-puzle\\backend\\fotopuzlebackend\\fotopuzlebackend\\appsettings.development.json||{90A6B3A7-C1A3-4009-A288-E2FF89E96FA0}",
       "RelativeMoniker": "D:0:0:{3AA8CC96-B11E-741B-190B-C6E9C830E219}|FotoPuzleBackend\\FotoPuzleBackend.csproj|solutionrelative:fotopuzlebackend\\appsettings.development.json||{90A6B3A7-C1A3-4009-A288-E2FF89E96FA0}"
-    },
-    {
-      "AbsoluteMoniker": "D:0:0:{3AA8CC96-B11E-741B-190B-C6E9C830E219}|FotoPuzleBackend\\FotoPuzleBackend.csproj|c:\\users\\lukas\\documents\\programming\\foto-puzle\\foto-puzle\\backend\\fotopuzlebackend\\fotopuzlebackend\\controllers\\completiontokencontroller.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}",
-      "RelativeMoniker": "D:0:0:{3AA8CC96-B11E-741B-190B-C6E9C830E219}|FotoPuzleBackend\\FotoPuzleBackend.csproj|solutionrelative:fotopuzlebackend\\controllers\\completiontokencontroller.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}"
-    },
-    {
-      "AbsoluteMoniker": "D:0:0:{3AA8CC96-B11E-741B-190B-C6E9C830E219}|FotoPuzleBackend\\FotoPuzleBackend.csproj|c:\\users\\lukas\\documents\\programming\\foto-puzle\\foto-puzle\\backend\\fotopuzlebackend\\fotopuzlebackend\\services\\completiontokenservice.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}",
-      "RelativeMoniker": "D:0:0:{3AA8CC96-B11E-741B-190B-C6E9C830E219}|FotoPuzleBackend\\FotoPuzleBackend.csproj|solutionrelative:fotopuzlebackend\\services\\completiontokenservice.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}"
-    },
-    {
-      "AbsoluteMoniker": "D:0:0:{3AA8CC96-B11E-741B-190B-C6E9C830E219}|FotoPuzleBackend\\FotoPuzleBackend.csproj|c:\\users\\lukas\\documents\\programming\\foto-puzle\\foto-puzle\\backend\\fotopuzlebackend\\fotopuzlebackend\\controllers\\puzzlecontroller.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}",
-      "RelativeMoniker": "D:0:0:{3AA8CC96-B11E-741B-190B-C6E9C830E219}|FotoPuzleBackend\\FotoPuzleBackend.csproj|solutionrelative:fotopuzlebackend\\controllers\\puzzlecontroller.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}"
-    },
-    {
-      "AbsoluteMoniker": "D:0:0:{3AA8CC96-B11E-741B-190B-C6E9C830E219}|FotoPuzleBackend\\FotoPuzleBackend.csproj|c:\\users\\lukas\\documents\\programming\\foto-puzle\\foto-puzle\\backend\\fotopuzlebackend\\fotopuzlebackend\\data\\appdbcontext.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}",
-      "RelativeMoniker": "D:0:0:{3AA8CC96-B11E-741B-190B-C6E9C830E219}|FotoPuzleBackend\\FotoPuzleBackend.csproj|solutionrelative:fotopuzlebackend\\data\\appdbcontext.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}"
-    },
-    {
-      "AbsoluteMoniker": "D:0:0:{3AA8CC96-B11E-741B-190B-C6E9C830E219}|FotoPuzleBackend\\FotoPuzleBackend.csproj|c:\\users\\lukas\\documents\\programming\\foto-puzle\\foto-puzle\\backend\\fotopuzlebackend\\fotopuzlebackend\\data\\dbdata.sql||{CC5D8DF0-88F4-4BB2-9DBB-B48CEE65C30A}",
-      "RelativeMoniker": "D:0:0:{3AA8CC96-B11E-741B-190B-C6E9C830E219}|FotoPuzleBackend\\FotoPuzleBackend.csproj|solutionrelative:fotopuzlebackend\\data\\dbdata.sql||{CC5D8DF0-88F4-4BB2-9DBB-B48CEE65C30A}"
-    },
-    {
-      "AbsoluteMoniker": "D:0:0:{3AA8CC96-B11E-741B-190B-C6E9C830E219}|FotoPuzleBackend\\FotoPuzleBackend.csproj|c:\\users\\lukas\\documents\\programming\\foto-puzle\\foto-puzle\\backend\\fotopuzlebackend\\fotopuzlebackend\\controllers\\authcontroller.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}",
-      "RelativeMoniker": "D:0:0:{3AA8CC96-B11E-741B-190B-C6E9C830E219}|FotoPuzleBackend\\FotoPuzleBackend.csproj|solutionrelative:fotopuzlebackend\\controllers\\authcontroller.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}"
-    },
-    {
-      "AbsoluteMoniker": "D:0:0:{3AA8CC96-B11E-741B-190B-C6E9C830E219}|FotoPuzleBackend\\FotoPuzleBackend.csproj|c:\\users\\lukas\\documents\\programming\\foto-puzle\\foto-puzle\\backend\\fotopuzlebackend\\fotopuzlebackend\\controllers\\examplecontroller.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}",
-      "RelativeMoniker": "D:0:0:{3AA8CC96-B11E-741B-190B-C6E9C830E219}|FotoPuzleBackend\\FotoPuzleBackend.csproj|solutionrelative:fotopuzlebackend\\controllers\\examplecontroller.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}"
-    },
-    {
-      "AbsoluteMoniker": "D:0:0:{3AA8CC96-B11E-741B-190B-C6E9C830E219}|FotoPuzleBackend\\FotoPuzleBackend.csproj|c:\\users\\lukas\\documents\\programming\\foto-puzle\\foto-puzle\\backend\\fotopuzlebackend\\fotopuzlebackend\\program.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}",
-      "RelativeMoniker": "D:0:0:{3AA8CC96-B11E-741B-190B-C6E9C830E219}|FotoPuzleBackend\\FotoPuzleBackend.csproj|solutionrelative:fotopuzlebackend\\program.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}"
-    },
-    {
-      "AbsoluteMoniker": "D:0:0:{3AA8CC96-B11E-741B-190B-C6E9C830E219}|FotoPuzleBackend\\FotoPuzleBackend.csproj|c:\\users\\lukas\\documents\\programming\\foto-puzle\\foto-puzle\\backend\\fotopuzlebackend\\fotopuzlebackend\\appsettings.json||{90A6B3A7-C1A3-4009-A288-E2FF89E96FA0}",
-      "RelativeMoniker": "D:0:0:{3AA8CC96-B11E-741B-190B-C6E9C830E219}|FotoPuzleBackend\\FotoPuzleBackend.csproj|solutionrelative:fotopuzlebackend\\appsettings.json||{90A6B3A7-C1A3-4009-A288-E2FF89E96FA0}"
-    },
-    {
-      "AbsoluteMoniker": "D:0:0:{3AA8CC96-B11E-741B-190B-C6E9C830E219}|FotoPuzleBackend\\FotoPuzleBackend.csproj|c:\\users\\lukas\\documents\\programming\\foto-puzle\\foto-puzle\\backend\\fotopuzlebackend\\fotopuzlebackend\\models\\entities\\photo.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}",
-      "RelativeMoniker": "D:0:0:{3AA8CC96-B11E-741B-190B-C6E9C830E219}|FotoPuzleBackend\\FotoPuzleBackend.csproj|solutionrelative:fotopuzlebackend\\models\\entities\\photo.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}"
-    },
-    {
-      "AbsoluteMoniker": "D:0:0:{3AA8CC96-B11E-741B-190B-C6E9C830E219}|FotoPuzleBackend\\FotoPuzleBackend.csproj|c:\\users\\lukas\\documents\\programming\\foto-puzle\\foto-puzle\\backend\\fotopuzlebackend\\fotopuzlebackend\\models\\entities\\puzzle.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}",
-      "RelativeMoniker": "D:0:0:{3AA8CC96-B11E-741B-190B-C6E9C830E219}|FotoPuzleBackend\\FotoPuzleBackend.csproj|solutionrelative:fotopuzlebackend\\models\\entities\\puzzle.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}"
-    },
-    {
-      "AbsoluteMoniker": "D:0:0:{3AA8CC96-B11E-741B-190B-C6E9C830E219}|FotoPuzleBackend\\FotoPuzleBackend.csproj|c:\\users\\lukas\\documents\\programming\\foto-puzle\\foto-puzle\\backend\\fotopuzlebackend\\fotopuzlebackend\\models\\entities\\completiontoken.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}",
-      "RelativeMoniker": "D:0:0:{3AA8CC96-B11E-741B-190B-C6E9C830E219}|FotoPuzleBackend\\FotoPuzleBackend.csproj|solutionrelative:fotopuzlebackend\\models\\entities\\completiontoken.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}"
-    },
-    {
-      "AbsoluteMoniker": "D:0:0:{3AA8CC96-B11E-741B-190B-C6E9C830E219}|FotoPuzleBackend\\FotoPuzleBackend.csproj|c:\\users\\lukas\\documents\\programming\\foto-puzle\\foto-puzle\\backend\\fotopuzlebackend\\fotopuzlebackend\\models\\entities\\user.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}",
-      "RelativeMoniker": "D:0:0:{3AA8CC96-B11E-741B-190B-C6E9C830E219}|FotoPuzleBackend\\FotoPuzleBackend.csproj|solutionrelative:fotopuzlebackend\\models\\entities\\user.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}"
-    },
-    {
-      "AbsoluteMoniker": "D:0:0:{3AA8CC96-B11E-741B-190B-C6E9C830E219}|FotoPuzleBackend\\FotoPuzleBackend.csproj|c:\\users\\lukas\\documents\\programming\\foto-puzle\\foto-puzle\\backend\\fotopuzlebackend\\fotopuzlebackend\\models\\dto\\logindto.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}",
-      "RelativeMoniker": "D:0:0:{3AA8CC96-B11E-741B-190B-C6E9C830E219}|FotoPuzleBackend\\FotoPuzleBackend.csproj|solutionrelative:fotopuzlebackend\\models\\dto\\logindto.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}"
-    },
-    {
-      "AbsoluteMoniker": "D:0:0:{3AA8CC96-B11E-741B-190B-C6E9C830E219}|FotoPuzleBackend\\FotoPuzleBackend.csproj|c:\\users\\lukas\\documents\\programming\\foto-puzle\\foto-puzle\\backend\\fotopuzlebackend\\fotopuzlebackend\\models\\dto\\userprofiledto.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}",
-      "RelativeMoniker": "D:0:0:{3AA8CC96-B11E-741B-190B-C6E9C830E219}|FotoPuzleBackend\\FotoPuzleBackend.csproj|solutionrelative:fotopuzlebackend\\models\\dto\\userprofiledto.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}"
     }
   ],
   "DocumentGroupContainers": [
@@ -74,69 +14,8 @@
       "DocumentGroups": [
         {
           "DockedWidth": 200,
-          "SelectedChildIndex": 5,
+          "SelectedChildIndex": 0,
           "Children": [
-            {
-              "$type": "Document",
-              "DocumentIndex": 8,
-              "Title": "Program.cs",
-              "DocumentMoniker": "C:\\Users\\Lukas\\Documents\\Programming\\foto-puzle\\foto-puzle\\backend\\FotoPuzleBackend\\FotoPuzleBackend\\Program.cs",
-              "RelativeDocumentMoniker": "FotoPuzleBackend\\Program.cs",
-              "ToolTip": "C:\\Users\\Lukas\\Documents\\Programming\\foto-puzle\\foto-puzle\\backend\\FotoPuzleBackend\\FotoPuzleBackend\\Program.cs",
-              "RelativeToolTip": "FotoPuzleBackend\\Program.cs",
-              "ViewState": "AgIAACIAAAAAAAAAAAAIwD0AAAAKAAAAAAAAAA==",
-              "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000738|",
-              "WhenOpened": "2026-03-11T18:35:16.953Z"
-            },
-            {
-              "$type": "Document",
-              "DocumentIndex": 6,
-              "Title": "AuthController.cs",
-              "DocumentMoniker": "C:\\Users\\Lukas\\Documents\\Programming\\foto-puzle\\foto-puzle\\backend\\FotoPuzleBackend\\FotoPuzleBackend\\Controllers\\AuthController.cs",
-              "RelativeDocumentMoniker": "FotoPuzleBackend\\Controllers\\AuthController.cs",
-              "ToolTip": "C:\\Users\\Lukas\\Documents\\Programming\\foto-puzle\\foto-puzle\\backend\\FotoPuzleBackend\\FotoPuzleBackend\\Controllers\\AuthController.cs",
-              "RelativeToolTip": "FotoPuzleBackend\\Controllers\\AuthController.cs",
-              "ViewState": "AgIAAFMAAAAAAAAAAAAgwGkAAAAyAAAAAAAAAA==",
-              "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000738|",
-              "WhenOpened": "2026-03-17T22:03:35.443Z"
-            },
-            {
-              "$type": "Document",
-              "DocumentIndex": 1,
-              "Title": "CompletionTokenController.cs",
-              "DocumentMoniker": "C:\\Users\\Lukas\\Documents\\Programming\\foto-puzle\\foto-puzle\\backend\\FotoPuzleBackend\\FotoPuzleBackend\\Controllers\\CompletionTokenController.cs",
-              "RelativeDocumentMoniker": "FotoPuzleBackend\\Controllers\\CompletionTokenController.cs",
-              "ToolTip": "C:\\Users\\Lukas\\Documents\\Programming\\foto-puzle\\foto-puzle\\backend\\FotoPuzleBackend\\FotoPuzleBackend\\Controllers\\CompletionTokenController.cs",
-              "RelativeToolTip": "FotoPuzleBackend\\Controllers\\CompletionTokenController.cs",
-              "ViewState": "AgIAAAsAAAAAAAAAAAAAwD4AAAAAAAAAAAAAAA==",
-              "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000738|",
-              "WhenOpened": "2026-03-22T18:21:02.282Z",
-              "EditorCaption": ""
-            },
-            {
-              "$type": "Document",
-              "DocumentIndex": 4,
-              "Title": "appDbContext.cs",
-              "DocumentMoniker": "C:\\Users\\Lukas\\Documents\\Programming\\foto-puzle\\foto-puzle\\backend\\FotoPuzleBackend\\FotoPuzleBackend\\Data\\appDbContext.cs",
-              "RelativeDocumentMoniker": "FotoPuzleBackend\\Data\\appDbContext.cs",
-              "ToolTip": "C:\\Users\\Lukas\\Documents\\Programming\\foto-puzle\\foto-puzle\\backend\\FotoPuzleBackend\\FotoPuzleBackend\\Data\\appDbContext.cs",
-              "RelativeToolTip": "FotoPuzleBackend\\Data\\appDbContext.cs",
-              "ViewState": "AgIAAAAAAAAAAAAAAAAAACMAAAAcAAAAAAAAAA==",
-              "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000738|",
-              "WhenOpened": "2026-03-05T22:55:40.263Z"
-            },
-            {
-              "$type": "Document",
-              "DocumentIndex": 2,
-              "Title": "CompletionTokenService.cs",
-              "DocumentMoniker": "C:\\Users\\Lukas\\Documents\\Programming\\foto-puzle\\foto-puzle\\backend\\FotoPuzleBackend\\FotoPuzleBackend\\Services\\CompletionTokenService.cs",
-              "RelativeDocumentMoniker": "FotoPuzleBackend\\Services\\CompletionTokenService.cs",
-              "ToolTip": "C:\\Users\\Lukas\\Documents\\Programming\\foto-puzle\\foto-puzle\\backend\\FotoPuzleBackend\\FotoPuzleBackend\\Services\\CompletionTokenService.cs",
-              "RelativeToolTip": "FotoPuzleBackend\\Services\\CompletionTokenService.cs",
-              "ViewState": "AgIAAAAAAAAAAAAAAAAAAAwAAAAqAAAAAAAAAA==",
-              "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000738|",
-              "WhenOpened": "2026-03-22T18:17:34.506Z"
-            },
             {
               "$type": "Document",
               "DocumentIndex": 0,
@@ -147,127 +26,22 @@
               "RelativeToolTip": "FotoPuzleBackend\\appsettings.Development.json",
               "ViewState": "AgIAAAAAAAAAAAAAAAAAAAoAAAABAAAAAAAAAA==",
               "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.001642|",
-              "WhenOpened": "2026-03-23T16:05:08.312Z",
+              "WhenOpened": "2026-04-26T14:43:06.947Z",
               "EditorCaption": ""
+            }
+          ]
+        },
+        {
+          "DockedWidth": 15,
+          "SelectedChildIndex": -1,
+          "Children": [
+            {
+              "$type": "Bookmark",
+              "Name": "ST:0:0:{d78612c7-9962-4b83-95d9-268046dad23a}"
             },
             {
-              "$type": "Document",
-              "DocumentIndex": 9,
-              "Title": "appsettings.json",
-              "DocumentMoniker": "C:\\Users\\Lukas\\Documents\\Programming\\foto-puzle\\foto-puzle\\backend\\FotoPuzleBackend\\FotoPuzleBackend\\appsettings.json",
-              "RelativeDocumentMoniker": "FotoPuzleBackend\\appsettings.json",
-              "ToolTip": "C:\\Users\\Lukas\\Documents\\Programming\\foto-puzle\\foto-puzle\\backend\\FotoPuzleBackend\\FotoPuzleBackend\\appsettings.json",
-              "RelativeToolTip": "FotoPuzleBackend\\appsettings.json",
-              "ViewState": "AgIAAAAAAAAAAAAAAAAAAA4AAAABAAAAAAAAAA==",
-              "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.001642|",
-              "WhenOpened": "2026-04-19T00:25:06.683Z"
-            },
-            {
-              "$type": "Document",
-              "DocumentIndex": 3,
-              "Title": "PuzzleController.cs",
-              "DocumentMoniker": "C:\\Users\\Lukas\\Documents\\Programming\\foto-puzle\\foto-puzle\\backend\\FotoPuzleBackend\\FotoPuzleBackend\\Controllers\\PuzzleController.cs",
-              "RelativeDocumentMoniker": "FotoPuzleBackend\\Controllers\\PuzzleController.cs",
-              "ToolTip": "C:\\Users\\Lukas\\Documents\\Programming\\foto-puzle\\foto-puzle\\backend\\FotoPuzleBackend\\FotoPuzleBackend\\Controllers\\PuzzleController.cs",
-              "RelativeToolTip": "FotoPuzleBackend\\Controllers\\PuzzleController.cs",
-              "ViewState": "AgIAAAMAAAAAAAAAAAAAABMAAAAcAAAAAAAAAA==",
-              "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000738|",
-              "WhenOpened": "2026-04-19T01:14:07.953Z"
-            },
-            {
-              "$type": "Document",
-              "DocumentIndex": 5,
-              "Title": "DBdata.sql",
-              "DocumentMoniker": "C:\\Users\\Lukas\\Documents\\Programming\\foto-puzle\\foto-puzle\\backend\\FotoPuzleBackend\\FotoPuzleBackend\\Data\\DBdata.sql",
-              "RelativeDocumentMoniker": "FotoPuzleBackend\\Data\\DBdata.sql",
-              "ToolTip": "C:\\Users\\Lukas\\Documents\\Programming\\foto-puzle\\foto-puzle\\backend\\FotoPuzleBackend\\FotoPuzleBackend\\Data\\DBdata.sql",
-              "RelativeToolTip": "FotoPuzleBackend\\Data\\DBdata.sql",
-              "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000826|",
-              "WhenOpened": "2026-04-19T01:30:01.09Z"
-            },
-            {
-              "$type": "Document",
-              "DocumentIndex": 10,
-              "Title": "Photo.cs",
-              "DocumentMoniker": "C:\\Users\\Lukas\\Documents\\Programming\\foto-puzle\\foto-puzle\\backend\\FotoPuzleBackend\\FotoPuzleBackend\\Models\\Entities\\Photo.cs",
-              "RelativeDocumentMoniker": "FotoPuzleBackend\\Models\\Entities\\Photo.cs",
-              "ToolTip": "C:\\Users\\Lukas\\Documents\\Programming\\foto-puzle\\foto-puzle\\backend\\FotoPuzleBackend\\FotoPuzleBackend\\Models\\Entities\\Photo.cs",
-              "RelativeToolTip": "FotoPuzleBackend\\Models\\Entities\\Photo.cs",
-              "ViewState": "AgIAABIAAAAAAAAAAAAuwB8AAABOAAAAAAAAAA==",
-              "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000738|",
-              "WhenOpened": "2026-03-22T18:09:16.77Z"
-            },
-            {
-              "$type": "Document",
-              "DocumentIndex": 7,
-              "Title": "ExampleController.cs",
-              "DocumentMoniker": "C:\\Users\\Lukas\\Documents\\Programming\\foto-puzle\\foto-puzle\\backend\\FotoPuzleBackend\\FotoPuzleBackend\\Controllers\\ExampleController.cs",
-              "RelativeDocumentMoniker": "FotoPuzleBackend\\Controllers\\ExampleController.cs",
-              "ToolTip": "C:\\Users\\Lukas\\Documents\\Programming\\foto-puzle\\foto-puzle\\backend\\FotoPuzleBackend\\FotoPuzleBackend\\Controllers\\ExampleController.cs",
-              "RelativeToolTip": "FotoPuzleBackend\\Controllers\\ExampleController.cs",
-              "ViewState": "AgIAAAAAAAAAAAAAAAAAAA4AAAAAAAAAAAAAAA==",
-              "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000738|",
-              "WhenOpened": "2026-03-22T18:18:37.362Z"
-            },
-            {
-              "$type": "Document",
-              "DocumentIndex": 11,
-              "Title": "Puzzle.cs",
-              "DocumentMoniker": "C:\\Users\\Lukas\\Documents\\Programming\\foto-puzle\\foto-puzle\\backend\\FotoPuzleBackend\\FotoPuzleBackend\\Models\\Entities\\Puzzle.cs",
-              "RelativeDocumentMoniker": "FotoPuzleBackend\\Models\\Entities\\Puzzle.cs",
-              "ToolTip": "C:\\Users\\Lukas\\Documents\\Programming\\foto-puzle\\foto-puzle\\backend\\FotoPuzleBackend\\FotoPuzleBackend\\Models\\Entities\\Puzzle.cs",
-              "RelativeToolTip": "FotoPuzleBackend\\Models\\Entities\\Puzzle.cs",
-              "ViewState": "AgIAAAYAAAAAAAAAAAAuwBMAAAAAAAAAAAAAAA==",
-              "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000738|",
-              "WhenOpened": "2026-03-22T18:09:13.064Z"
-            },
-            {
-              "$type": "Document",
-              "DocumentIndex": 12,
-              "Title": "CompletionToken.cs",
-              "DocumentMoniker": "C:\\Users\\Lukas\\Documents\\Programming\\foto-puzle\\foto-puzle\\backend\\FotoPuzleBackend\\FotoPuzleBackend\\Models\\Entities\\CompletionToken.cs",
-              "RelativeDocumentMoniker": "FotoPuzleBackend\\Models\\Entities\\CompletionToken.cs",
-              "ToolTip": "C:\\Users\\Lukas\\Documents\\Programming\\foto-puzle\\foto-puzle\\backend\\FotoPuzleBackend\\FotoPuzleBackend\\Models\\Entities\\CompletionToken.cs",
-              "RelativeToolTip": "FotoPuzleBackend\\Models\\Entities\\CompletionToken.cs",
-              "ViewState": "AgIAAAAAAAAAAAAAAAAAAAsAAAAzAAAAAAAAAA==",
-              "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000738|",
-              "WhenOpened": "2026-03-22T18:15:51.408Z"
-            },
-            {
-              "$type": "Document",
-              "DocumentIndex": 15,
-              "Title": "UserProfileDTO.cs",
-              "DocumentMoniker": "C:\\Users\\Lukas\\Documents\\Programming\\foto-puzle\\foto-puzle\\backend\\FotoPuzleBackend\\FotoPuzleBackend\\Models\\DTO\\UserProfileDTO.cs",
-              "RelativeDocumentMoniker": "FotoPuzleBackend\\Models\\DTO\\UserProfileDTO.cs",
-              "ToolTip": "C:\\Users\\Lukas\\Documents\\Programming\\foto-puzle\\foto-puzle\\backend\\FotoPuzleBackend\\FotoPuzleBackend\\Models\\DTO\\UserProfileDTO.cs",
-              "RelativeToolTip": "FotoPuzleBackend\\Models\\DTO\\UserProfileDTO.cs",
-              "ViewState": "AgIAAAAAAAAAAAAAAAAAAAoAAAAtAAAAAAAAAA==",
-              "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000738|",
-              "WhenOpened": "2026-03-17T21:26:35.133Z"
-            },
-            {
-              "$type": "Document",
-              "DocumentIndex": 14,
-              "Title": "LoginDTO.cs",
-              "DocumentMoniker": "C:\\Users\\Lukas\\Documents\\Programming\\foto-puzle\\foto-puzle\\backend\\FotoPuzleBackend\\FotoPuzleBackend\\Models\\DTO\\LoginDTO.cs",
-              "RelativeDocumentMoniker": "FotoPuzleBackend\\Models\\DTO\\LoginDTO.cs",
-              "ToolTip": "C:\\Users\\Lukas\\Documents\\Programming\\foto-puzle\\foto-puzle\\backend\\FotoPuzleBackend\\FotoPuzleBackend\\Models\\DTO\\LoginDTO.cs",
-              "RelativeToolTip": "FotoPuzleBackend\\Models\\DTO\\LoginDTO.cs",
-              "ViewState": "AgIAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA==",
-              "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000738|",
-              "WhenOpened": "2026-03-17T22:03:13.023Z"
-            },
-            {
-              "$type": "Document",
-              "DocumentIndex": 13,
-              "Title": "User.cs",
-              "DocumentMoniker": "C:\\Users\\Lukas\\Documents\\Programming\\foto-puzle\\foto-puzle\\backend\\FotoPuzleBackend\\FotoPuzleBackend\\Models\\Entities\\User.cs",
-              "RelativeDocumentMoniker": "FotoPuzleBackend\\Models\\Entities\\User.cs",
-              "ToolTip": "C:\\Users\\Lukas\\Documents\\Programming\\foto-puzle\\foto-puzle\\backend\\FotoPuzleBackend\\FotoPuzleBackend\\Models\\Entities\\User.cs",
-              "RelativeToolTip": "FotoPuzleBackend\\Models\\Entities\\User.cs",
-              "ViewState": "AgIAAAcAAAAAAAAAAAAzwBQAAABCAAAAAAAAAA==",
-              "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000738|",
-              "WhenOpened": "2026-03-05T22:54:40.785Z"
+              "$type": "Bookmark",
+              "Name": "ST:0:0:{34e76e81-ee4a-11d0-ae2e-00a0c90fffc3}"
             }
           ]
         }

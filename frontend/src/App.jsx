@@ -8,6 +8,7 @@ import CheckOutPage from "./pages/CheckOutPage";
 import RegistrationPage from "./pages/RegistrationPage";
 import LoginPage from "./pages/LoginPage";
 import AdminPage from "./pages/AdminPage";
+import OrderHistoryPage from "./pages/OrderHistoryPage";
 import LoadingSpinner from "./components/LoadingSpinner";
 
 function App() {
@@ -21,6 +22,7 @@ function App() {
                 <Route path="/profile" element={<ProfilePage />} />
                 <Route path="/login" element={<LoginPage />} />
                 <Route path="/admin" element={<AdminPage />} />
+                <Route path="/orders" element={<OrderHistoryPage />} />
             </Routes>
         </BrowserRouter>
     );
