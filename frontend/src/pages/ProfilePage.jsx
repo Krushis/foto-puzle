@@ -166,6 +166,10 @@ function ProfilePage() {
                     </div>
                 )}
 
+                <button className="orders-button" onClick={() => navigate("/orders")}>
+                    Užsakymų istorija
+                </button>
+
                 <button className="back-button" onClick={() => navigate("/")}>
                     Grįžti į pagrindinį
                 </button>

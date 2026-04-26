@@ -141,6 +141,7 @@
   border-radius: 10px;
   cursor: pointer;
   transition: all 0.25s ease;
+  width: 100%;
 }
 
 .back-button:hover {
@@ -150,6 +151,29 @@
 }
 
 .back-button:active {
+  transform: translateY(0px);
+  box-shadow: none;
+}
+
+.orders-button {
+  margin-top: 28px;
+  padding: 12px 28px;
+  font-size: 1rem;
+  font-weight: bold;
+  color: white;
+  background-color: #2563eb;
+  border: none;
+  border-radius: 10px;
+  cursor: pointer;
+  transition: all 0.25s ease;
+  width: 100%;
+}
+.orders-button:hover {
+  background-color: #1d4ed8;
+  transform: translateY(-2px);
+  box-shadow: 0 6px 12px rgba(0, 0, 0, 0.15);
+}
+.orders-button:active {
   transform: translateY(0px);
   box-shadow: none;
 }

@@ -1,0 +1,72 @@
+.orders-page {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  min-height: 100vh;
+  background: linear-gradient(to right, #f5f7fa, #c3cfe2);
+  font-family: 'Arial', sans-serif;
+  padding: 40px 20px;
+}
+
+.orders-container {
+  max-width: 600px;
+  width: 100%;
+}
+
+.orders-container h1 {
+  font-size: 2rem;
+  color: #2c3e50;
+  text-align: center;
+  margin-bottom: 24px;
+}
+
+.order-card {
+  padding: 20px;
+  border-radius: 12px;
+  border: 1px solid #cfd7df;
+  background-color: #fff;
+  box-shadow: 0 2px 8px rgba(0,0,0,0.07);
+  margin-bottom: 16px;
+}
+
+.order-card p {
+  margin: 6px 0;
+  color: #555;
+  font-size: 1rem;
+}
+
+.orders-actions {
+  display: flex;
+  gap: 12px;
+  margin-top: 24px;
+  justify-content: center;
+}
+
+.orders-actions button {
+  padding: 12px 28px;
+  font-size: 1rem;
+  font-weight: bold;
+  color: white;
+  border: none;
+  border-radius: 10px;
+  cursor: pointer;
+  transition: all 0.25s ease;
+}
+
+.btn-back {
+  background-color: #2c3e50;
+}
+.btn-back:hover {
+  background-color: #1f2d3a;
+  transform: translateY(-2px);
+  box-shadow: 0 6px 12px rgba(0,0,0,0.15);
+}
+
+.btn-home {
+  background-color: #2563eb;
+}
+.btn-home:hover {
+  background-color: #1d4ed8;
+  transform: translateY(-2px);
+  box-shadow: 0 6px 12px rgba(0,0,0,0.15);
+}
