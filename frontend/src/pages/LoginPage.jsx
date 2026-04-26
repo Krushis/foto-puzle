@@ -3,6 +3,7 @@ import { useNavigate } from "react-router-dom";
 import "../styles/LoginPage.css";
 import LoadingSpinner from "../components/LoadingSpinner";
 import { auth } from "../utils/auth";
+import { apiFetch } from "../utils/api";
 
 function LoginPage() {
     const navigate = useNavigate();
@@ -18,7 +19,7 @@ function LoginPage() {
         setLoading(true);
 
         try {
-            const response = await fetch("http://localhost:5192/api/auth/login", {
+            const response = await apiFetch("/api/auth/login", {
                 method: "POST",
                 headers: {
                     "Content-Type": "application/json",
