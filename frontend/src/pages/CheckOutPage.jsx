@@ -160,9 +160,9 @@ export default function CheckOutPage() {
 
     
 
-    const [selectedRatio, setSelectedRatio] = useState("");
-    const [options, setOptions] = useState([]);
-    const [selectedCount, setSelectedCount] = useState(null);
+    const [selectedRatio, setSelectedRatio] = useState("1:1");
+    const [options, setOptions] = useState(ratioConfig["1:1"].pieces);
+    const [selectedCount, setSelectedCount] = useState(ratioConfig["1:1"].pieces[0]);
 
     const [uploadedFileName, setUploadedFileName] = useState("");
     const [selectedFile, setSelectedFile] = useState(null);
@@ -480,6 +480,29 @@ export default function CheckOutPage() {
         }
     };
 
+    const uploadToGallery = async () => {
+            if (!createdPuzzleId) {
+                alert("Pirmiausia reikia išsaugoti dėlionę.");
+                return;
+            }
+
+            try {
+                const response = await apiFetch(`/api/puzzle/${createdPuzzleId}/public`, {
+                    method: "PUT",
+                });
+
+                const data = await response.json();
+
+                if (!response.ok) {
+                    throw new Error(data.message || "Nepavyko įkelti į galeriją.");
+                }
+
+                alert(data.message);
+            } catch (err) {
+                alert(err.message);
+            }
+        };
+
     const onMouseUp = (e) => {
         if (!drag.current) {
             setFloater(null);
@@ -667,6 +690,23 @@ export default function CheckOutPage() {
                             }}
                         >
                             Užsakyti dėlionę
+
+                        </button>
+                        <button
+                            onClick={uploadToGallery}
+                            disabled={!createdPuzzleId}
+                            style={{
+                                padding: "8px 16px",
+                                background: "#16a34a",
+                                color: "#fff",
+                                border: "none",
+                                borderRadius: 6,
+                                cursor: "pointer",
+                                fontWeight: 600,
+                                marginTop: 12,
+                            }}
+                        >
+                            Įkelti į galeriją
                         </button>
                     </div>
 
@@ -802,7 +842,7 @@ export default function CheckOutPage() {
                             disabled={!selectedRatio}
                         />
                     </label>
-
+                    
                     {imageUrl && (
                         <label style={{ fontWeight: 600 }}>
                             Detalių skaičius&nbsp;

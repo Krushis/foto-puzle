@@ -102,6 +102,24 @@ function ProfilePage() {
         }
     };
 
+    const uploadPuzzleToGallery = async (puzzleId) => {
+        try {
+            const response = await apiFetch(`/api/puzzle/${puzzleId}/public`, {
+                method: "PUT",
+            });
+
+            const data = await response.json();
+
+            if (!response.ok) {
+                throw new Error(data.message || "Nepavyko įkelti į galeriją.");
+            }
+
+            alert(data.message);
+        } catch (err) {
+            alert(err.message);
+        }
+    };
+
     if (error) return <p>{error}</p>;
     if (loading) return <LoadingSpinner size="large" color="black" />;
 
@@ -167,7 +185,7 @@ function ProfilePage() {
                             >
                                 {puzzle.filePath && (
                                     <img
-                                        src={`http://localhost:5192${puzzle.filePath}`}
+                                        src={getImageUrl(puzzle.filePath)}
                                         alt={puzzle.originalFilename}
                                         className="profile-puzzle-image"
                                     />
@@ -182,6 +200,17 @@ function ProfilePage() {
                                     <p><strong>Santykis:</strong> {puzzle.aspectRatio}</p>
                                 )}
                                 <p><strong>Sukurta:</strong> {new Date(puzzle.createdAt).toLocaleDateString()}</p>
+
+                                <button
+                                    type="button"
+                                    className="upload-gallery-button"
+                                    onClick={(e) => {
+                                        e.stopPropagation();
+                                        uploadPuzzleToGallery(puzzle.puzzleId);
+                                    }}
+                                >
+                                    Įkelti į galeriją
+                                </button>
                             </div>
                         ))}
                     </div>

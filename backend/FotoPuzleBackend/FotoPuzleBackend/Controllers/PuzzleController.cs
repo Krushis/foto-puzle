@@ -69,7 +69,8 @@ namespace FotoPuzleBackend.Controllers
                     MimeType = dto.Image.ContentType,
                     Status = PhotoStatus.Ready,
                     UploadedAt = DateTime.UtcNow,
-                    CreatedAt = DateTime.UtcNow
+                    CreatedAt = DateTime.UtcNow,
+                    IsPublic = dto.IsPublic
                 };
 
                 _context.Photos.Add(photo);
@@ -105,6 +106,48 @@ namespace FotoPuzleBackend.Controllers
                 return StatusCode(500, new { message = ex.Message });
             }
         }
+
+        [HttpPut("{id}/public")]
+        public async Task<IActionResult> MakePublic(int id)
+        {
+            var puzzle = await _context.Puzzles
+                .Include(p => p.Photo)
+                .FirstOrDefaultAsync(p => p.Id == id);
+
+            if (puzzle == null)
+                return NotFound(new { message = "Puzzle not found" });
+
+            puzzle.Photo.IsPublic = true;
+            puzzle.Photo.UpdatedAt = DateTime.UtcNow;
+
+            await _context.SaveChangesAsync();
+
+            return Ok(new { message = "Dėlionė įkelta į galeriją." });
+        }
+
+        [HttpGet("public")]
+        public async Task<IActionResult> GetPublicPuzzles()
+        {
+            var puzzles = await _context.Puzzles
+                .Include(p => p.Photo)
+                .Include(p => p.User)
+                .Where(p => p.Photo.IsPublic)
+                .OrderByDescending(p => p.CreatedAt)
+                .Select(p => new
+                {
+                    puzzleId = p.Id,
+                    username = p.User.Username,
+                    pieceCount = p.PieceCount,
+                    aspectRatio = p.AspectRatio,
+                    filePath = p.Photo.FilePath,
+                    originalFilename = p.Photo.OriginalFilename,
+                    createdAt = p.CreatedAt
+                })
+                .ToListAsync();
+
+            return Ok(puzzles);
+        }
+
         [HttpGet("{id}")]
         public async Task<IActionResult> GetPuzzle(int id)
         {
