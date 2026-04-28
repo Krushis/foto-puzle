@@ -10,6 +10,7 @@
         public int Id { get; set; }
         public int PhotoId { get; set; }
         public int UserId { get; set; }
+        public string AspectRatio { get; set; } = "1:1";
 
         public DifficultyLevel Difficulty { get; set; } = DifficultyLevel.Medium;
         public int PieceCount { get; set; }

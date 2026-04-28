@@ -1,4 +1,5 @@
-import React, { useState, useRef } from "react";
+import React, { useState, useRef, useEffect } from "react";
+import { useParams } from "react-router-dom";
 import { auth } from "../utils/auth";
 import { apiFetch } from "../utils/api";
 
@@ -11,6 +12,8 @@ const ratioConfig = {
     "16:9": { value: 16 / 9, pieces: [16, 40] },
     "9:16": { value: 9 / 16, pieces: [16, 40] },
 };
+
+const API_BASE_URL = "http://localhost:5192";
 
 function chooseGrid(count, ratio) {
     let best = { rows: 1, cols: count, score: Infinity };
@@ -25,63 +28,65 @@ function chooseGrid(count, ratio) {
     return { rows: best.rows, cols: best.cols };
 }
 
-// +1 = tab (knob), -1 = blank (hole), 0 = flat (border edge)
 function buildConnectors(rows, cols) {
-    // hConn[r][c]: bottom connector of piece(r,c), for r < rows-1
     const hConn = Array.from({ length: rows - 1 }, () =>
         Array.from({ length: cols }, () => (Math.random() < 0.5 ? 1 : -1))
     );
-    // vConn[r][c]: right connector of piece(r,c), for c < cols-1
+
     const vConn = Array.from({ length: rows }, () =>
         Array.from({ length: cols - 1 }, () => (Math.random() < 0.5 ? 1 : -1))
     );
+
     return { hConn, vConn };
 }
 
-// k = the cubic bezier constant for a quarter-circle/ellipse approximation
 const K = 0.5523;
 
-// Horizontal edge from (fromX, y) → (toX, y)
-// bumpSign: -1 = protrude up (top edge), +1 = protrude down (bottom edge)
 function hEdge(fromX, y, toX, connector, bumpSign, tabSize) {
     if (connector === 0) return `L ${toX} ${y} `;
+
     const bump = tabSize * connector * bumpSign;
-    const mid  = (fromX + toX) / 2;
-    const s    = Math.sign(toX - fromX); // +1 L→R, -1 R→L
-    const a    = tabSize * 0.55 * s;     // signed horizontal semi-axis (~circle when a ≈ |bump|)
+    const mid = (fromX + toX) / 2;
+    const s = Math.sign(toX - fromX);
+    const a = tabSize * 0.55 * s;
+
     return (
         `L ${mid - a} ${y} ` +
-        `C ${mid - a} ${y + K*bump}, ${mid - K*a} ${y + bump}, ${mid} ${y + bump} ` +
-        `C ${mid + K*a} ${y + bump}, ${mid + a} ${y + K*bump}, ${mid + a} ${y} ` +
+        `C ${mid - a} ${y + K * bump}, ${mid - K * a} ${y + bump}, ${mid} ${y + bump} ` +
+        `C ${mid + K * a} ${y + bump}, ${mid + a} ${y + K * bump}, ${mid + a} ${y} ` +
         `L ${toX} ${y} `
     );
 }
 
-// Vertical edge from (x, fromY) → (x, toY)
-// bumpSign: +1 = protrude right (right edge), -1 = protrude left (left edge)
 function vEdge(x, fromY, toY, connector, bumpSign, tabSize) {
     if (connector === 0) return `L ${x} ${toY} `;
+
     const bump = tabSize * connector * bumpSign;
-    const mid  = (fromY + toY) / 2;
-    const s    = Math.sign(toY - fromY);
-    const a    = tabSize * 0.55 * s;
+    const mid = (fromY + toY) / 2;
+    const s = Math.sign(toY - fromY);
+    const a = tabSize * 0.55 * s;
+
     return (
         `L ${x} ${mid - a} ` +
-        `C ${x + K*bump} ${mid - a}, ${x + bump} ${mid - K*a}, ${x + bump} ${mid} ` +
-        `C ${x + bump} ${mid + K*a}, ${x + K*bump} ${mid + a}, ${x} ${mid + a} ` +
+        `C ${x + K * bump} ${mid - a}, ${x + bump} ${mid - K * a}, ${x + bump} ${mid} ` +
+        `C ${x + bump} ${mid + K * a}, ${x + K * bump} ${mid + a}, ${x} ${mid + a} ` +
         `L ${x} ${toY} `
     );
 }
 
 function puzzlePiecePath(tileW, tileH, connectors, TAB) {
-    const ox = TAB, oy = TAB;
-    const x1 = ox + tileW, y1 = oy + tileH;
+    const ox = TAB;
+    const oy = TAB;
+    const x1 = ox + tileW;
+    const y1 = oy + tileH;
+
     let d = `M ${ox} ${oy} `;
-    d += hEdge(ox, oy, x1, connectors.top,    -1, TAB); // top: left→right, tab up
-    d += vEdge(x1, oy, y1, connectors.right,  +1, TAB); // right: top→bottom, tab right
-    d += hEdge(x1, y1, ox, connectors.bottom, +1, TAB); // bottom: right→left, tab down
-    d += vEdge(ox, y1, oy, connectors.left,   -1, TAB); // left: bottom→top, tab left
-    return d + 'Z';
+    d += hEdge(ox, oy, x1, connectors.top, -1, TAB);
+    d += vEdge(x1, oy, y1, connectors.right, +1, TAB);
+    d += hEdge(x1, y1, ox, connectors.bottom, +1, TAB);
+    d += vEdge(ox, y1, oy, connectors.left, -1, TAB);
+
+    return d + "Z";
 }
 
 function createPieces(imageUrl, rows, cols, boardW, boardH) {
@@ -97,20 +102,22 @@ function createPieces(imageUrl, rows, cols, boardW, boardH) {
     const { hConn, vConn } = buildConnectors(rows, cols);
 
     const pieces = [];
+
     for (let r = 0; r < rows; r++) {
         for (let c = 0; c < cols; c++) {
             const left =
                 SCATTER_PAD +
                 Math.random() * Math.max(0, scatterW - tileW - SCATTER_PAD * 2);
+
             const top =
                 SCATTER_PAD +
                 Math.random() * Math.max(0, scatterH - tileH - SCATTER_PAD * 2);
 
             const connectors = {
-                top:    r === 0        ? 0 : -hConn[r - 1][c],
+                top: r === 0 ? 0 : -hConn[r - 1][c],
                 bottom: r === rows - 1 ? 0 : hConn[r][c],
-                left:   c === 0        ? 0 : -vConn[r][c - 1],
-                right:  c === cols - 1 ? 0 : vConn[r][c],
+                left: c === 0 ? 0 : -vConn[r][c - 1],
+                right: c === cols - 1 ? 0 : vConn[r][c],
             };
 
             pieces.push({
@@ -145,18 +152,25 @@ function createPieces(imageUrl, rows, cols, boardW, boardH) {
 }
 
 export default function CheckOutPage() {
+    const { id } = useParams();
     const [pieces, setPieces] = useState([]);
     const [boardInfo, setBoardInfo] = useState(null);
     const [imageUrl, setImageUrl] = useState(null);
     const [assetSize, setAssetSize] = useState({ w: 0, h: 0 });
-    const [selectedRatio, setSelectedRatio] = useState("");
-    const [options, setOptions] = useState([]);
-    const [selectedCount, setSelectedCount] = useState(null);
+
+    
+
+    const [selectedRatio, setSelectedRatio] = useState("1:1");
+    const [options, setOptions] = useState(ratioConfig["1:1"].pieces);
+    const [selectedCount, setSelectedCount] = useState(ratioConfig["1:1"].pieces[0]);
+
     const [uploadedFileName, setUploadedFileName] = useState("");
+    const [selectedFile, setSelectedFile] = useState(null);
 
     const [message, setMessage] = useState(
         "Pasirinkite jūsų nuotraukos santykį ir įkelkite nuotrauką užsakymui"
     );
+
     const [solved, setSolved] = useState(false);
     const [rewardClaimed, setRewardClaimed] = useState(false);
     const [discountToken, setDiscountToken] = useState(null);
@@ -214,6 +228,58 @@ export default function CheckOutPage() {
         setMessage("Sudėkite puzlę ir gaukite prizą!");
     };
 
+    useEffect(() => {
+    if (!id) return;
+
+    apiFetch(`/api/puzzle/${id}`)
+        .then(async (res) => {
+            if (!res.ok) {
+                throw new Error("Nepavyko įkelti dėlionės");
+            }
+
+            return await res.json();
+        })
+        .then((data) => {
+            const ratioKey = data.aspectRatio || "1:1";
+            const ratio = ratioConfig[ratioKey];
+
+            if (!ratio) {
+                throw new Error("Blogas dėlionės santykis");
+            }
+
+            const fullImageUrl = `${API_BASE_URL}${data.filePath}`;
+
+            setSelectedRatio(ratioKey);
+            setSelectedCount(data.pieceCount);
+            setOptions(ratio.pieces);
+            setImageUrl(fullImageUrl);
+            setUploadedFileName(data.originalFilename);
+            setSelectedFile(null);
+            setCreatedPuzzleId(data.puzzleId);
+            setMessage("Sudėkite išsaugotą puzlę iš naujo!");
+
+            const img = new Image();
+
+            img.onload = () => {
+                setAssetSize({ w: img.width, h: img.height });
+
+                buildPuzzle(
+                    data.pieceCount,
+                    img.width,
+                    img.height,
+                    fullImageUrl,
+                    ratio.value
+                );
+            };
+
+            img.src = fullImageUrl;
+        })
+        .catch((err) => {
+            console.error(err);
+            alert(err.message || "Nepavyko įkelti dėlionės.");
+        });
+        }, [id]);   
+
     const shuffleUnsolved = () => {
         const trayRect = trayRef.current.getBoundingClientRect();
 
@@ -221,13 +287,10 @@ export default function CheckOutPage() {
             prev.map((p) => {
                 if (p.locked) return p;
 
-                const randomX = Math.random() * (trayRect.width - p.tileW);
-                const randomY = Math.random() * (trayRect.height - p.tileH);
-
                 return {
                     ...p,
-                    left: randomX,
-                    top: randomY,
+                    left: Math.random() * (trayRect.width - p.tileW),
+                    top: Math.random() * (trayRect.height - p.tileH),
                     onBoard: false,
                 };
             })
@@ -248,6 +311,8 @@ export default function CheckOutPage() {
         if (!file) return;
 
         setUploadedFileName(file.name);
+        setSelectedFile(file);
+
         const url = URL.createObjectURL(file);
 
         const img = new Image();
@@ -263,6 +328,7 @@ export default function CheckOutPage() {
                 ratioConfig[selectedRatio].value
             );
         };
+
         img.src = url;
     };
 
@@ -302,56 +368,60 @@ export default function CheckOutPage() {
         setFloater({ id: drag.current.id, pageX: e.clientX, pageY: e.clientY });
     };
 
-   const savePuzzleAndIssueToken = async () => {
+    const savePuzzleAndIssueToken = async () => {
         const user = auth.getUser();
-        console.log("USER FROM TOKEN:", user); // 👈 add this
-        if (!user) return;
+
+        if (!user) {
+            alert("Pirmiausia prisijunkite.");
+            return;
+        }
+
+        // 🔥 jei jau egzistuojantis puzzle (replay)
+        if (id) {
+            setCreatedPuzzleId(Number(id));
+            setDiscountToken("replay-token");
+            setRewardClaimed(false);
+            return;
+        }
+
+        // 🔥 tik naujam puzzle reikia image
+        if (!selectedFile) {
+            alert("Nuotrauka nepasirinkta.");
+            return;
+        }
 
         try {
-            const createPuzzleResponse = await apiFetch("/api/puzzle/create", {
+            const formData = new FormData();
+            formData.append("userId", user.userId);
+            formData.append("pieceCount", selectedCount);
+            formData.append("aspectRatio", selectedRatio);
+            formData.append("originalFilename", uploadedFileName || selectedFile.name);
+            formData.append("image", selectedFile);
+
+            const res = await apiFetch("/api/puzzle/create", {
                 method: "POST",
-                body: JSON.stringify({
-                    userId: user.userId,
-                    pieceCount: selectedCount,
-                    originalFilename: uploadedFileName || "uploaded-image.jpg",
-                }),
+                body: formData,
             });
-            
-            const createPuzzleText = await createPuzzleResponse.text();
-            let createPuzzleData = {};
-            try {
-                createPuzzleData = createPuzzleText ? JSON.parse(createPuzzleText) : {};
-            } catch {
-                throw new Error(createPuzzleText || "Nepavyko išsaugoti dėlionės");
-            }
-            if (!createPuzzleResponse.ok) {
-                throw new Error(createPuzzleData.message || "Nepavyko išsaugoti dėlionės");
-            }
 
-            setCreatedPuzzleId(createPuzzleData.id);
+            const data = await res.json();
 
-            const tokenResponse = await apiFetch("/api/completiontoken/issue", {
+            if (!res.ok) throw new Error(data.message);
+
+            setCreatedPuzzleId(data.id);
+
+            // 🔥 iškart token
+            const tokenRes = await apiFetch("/api/completiontoken/issue", {
                 method: "POST",
                 body: JSON.stringify({
-                    puzzleId: createPuzzleData.id,
+                    puzzleId: data.id,
                 }),
             });
 
-            const tokenText = await tokenResponse.text();
-            let tokenData = {};
-            try {
-                tokenData = tokenText ? JSON.parse(tokenText) : {};
-            } catch {
-                throw new Error(tokenText || "Nepavyko sugeneruoti nuolaidos žetono");
-            }
-            if (!tokenResponse.ok) {
-                throw new Error(tokenData.error || "Nepavyko sugeneruoti nuolaidos žetono");
-            }
+            const tokenData = await tokenRes.json();
 
             setDiscountToken(tokenData.token);
         } catch (err) {
-            console.error("savePuzzleAndIssueToken error:", err);
-            alert(err.message || "Nepavyko išsaugoti dėlionės.");
+            alert(err.message);
         }
     };
 
@@ -378,16 +448,16 @@ export default function CheckOutPage() {
             setOrderMessage("");
 
             const response = await apiFetch("/api/order", {
-            method: "POST",
-            body: JSON.stringify({
-                userId: user.userId,
-                puzzleId: createdPuzzleId,
-                fullName,
-                cardNumber,
-                expiration,
-                cvv,
-            }),
-        });
+                method: "POST",
+                body: JSON.stringify({
+                    userId: user.userId,
+                    puzzleId: createdPuzzleId,
+                    fullName,
+                    cardNumber,
+                    expiration,
+                    cvv,
+                }),
+            });
 
             const text = await response.text();
 
@@ -409,6 +479,29 @@ export default function CheckOutPage() {
             setOrdering(false);
         }
     };
+
+    const uploadToGallery = async () => {
+            if (!createdPuzzleId) {
+                alert("Pirmiausia reikia išsaugoti dėlionę.");
+                return;
+            }
+
+            try {
+                const response = await apiFetch(`/api/puzzle/${createdPuzzleId}/public`, {
+                    method: "PUT",
+                });
+
+                const data = await response.json();
+
+                if (!response.ok) {
+                    throw new Error(data.message || "Nepavyko įkelti į galeriją.");
+                }
+
+                alert(data.message);
+            } catch (err) {
+                alert(err.message);
+            }
+        };
 
     const onMouseUp = (e) => {
         if (!drag.current) {
@@ -446,8 +539,10 @@ export default function CheckOutPage() {
             if (overBoard) {
                 const localX = piecePageX - boardRect.left;
                 const localY = piecePageY - boardRect.top;
+
                 const snapX = Math.round(localX / p.tileW) * p.tileW;
                 const snapY = Math.round(localY / p.tileH) * p.tileH;
+
                 const dx = Math.abs(p.correctLeft - snapX);
                 const dy = Math.abs(p.correctTop - snapY);
                 const threshold = Math.max(8, Math.min(p.tileW, p.tileH) * 0.2);
@@ -475,6 +570,7 @@ export default function CheckOutPage() {
                 0,
                 Math.min(piecePageX - trayRect.left, trayRect.width - p.tileW)
             );
+
             const localY = Math.max(
                 0,
                 Math.min(piecePageY - trayRect.top, trayRect.height - p.tileH)
@@ -496,7 +592,14 @@ export default function CheckOutPage() {
         if (justSolved) {
             setMessage("Puzlė sudėta sėkmingai!");
             setSolved(true);
-            savePuzzleAndIssueToken();
+
+            if (!id) {
+                savePuzzleAndIssueToken();
+            } else {
+                setCreatedPuzzleId(Number(id));
+                setDiscountToken("replay-token");
+                setRewardClaimed(false);
+            }
         }
 
         setFloater(null);
@@ -587,6 +690,23 @@ export default function CheckOutPage() {
                             }}
                         >
                             Užsakyti dėlionę
+
+                        </button>
+                        <button
+                            onClick={uploadToGallery}
+                            disabled={!createdPuzzleId}
+                            style={{
+                                padding: "8px 16px",
+                                background: "#16a34a",
+                                color: "#fff",
+                                border: "none",
+                                borderRadius: 6,
+                                cursor: "pointer",
+                                fontWeight: 600,
+                                marginTop: 12,
+                            }}
+                        >
+                            Įkelti į galeriją
                         </button>
                     </div>
 
@@ -674,7 +794,7 @@ export default function CheckOutPage() {
                 </div>
             )}
 
-            {!solved && (
+            {!solved && !id && (
                 <div
                     style={{
                         display: "flex",
@@ -722,7 +842,7 @@ export default function CheckOutPage() {
                             disabled={!selectedRatio}
                         />
                     </label>
-
+                    
                     {imageUrl && (
                         <label style={{ fontWeight: 600 }}>
                             Detalių skaičius&nbsp;
@@ -770,7 +890,6 @@ export default function CheckOutPage() {
                                 boxShadow: "0 2px 12px rgba(0,0,0,0.15)",
                             }}
                         >
-
                             {boardPieces.map((p) => {
                                 const isFloating = floater?.id === p.id;
                                 if (isFloating) return null;
@@ -851,6 +970,7 @@ export default function CheckOutPage() {
 
 function PuzzlePiece({ piece, imageUrl, boardW, boardH, onMouseDown, style = {}, solved }) {
     const { left: pLeft, top: pTop, tileW, tileH, r, c, locked, connectors } = piece;
+
     const TAB = Math.round(Math.min(tileW, tileH) * 0.2);
     const svgW = tileW + 2 * TAB;
     const svgH = tileH + 2 * TAB;
@@ -858,9 +978,10 @@ function PuzzlePiece({ piece, imageUrl, boardW, boardH, onMouseDown, style = {},
     const pathD = puzzlePiecePath(tileW, tileH, connectors, TAB);
 
     const { left: sLeft, top: sTop, position: sPos, ...restStyle } = style;
+
     const finalLeft = (sLeft !== undefined ? sLeft : pLeft) - TAB;
-    const finalTop  = (sTop  !== undefined ? sTop  : pTop)  - TAB;
-    const finalPos  = sPos || "absolute";
+    const finalTop = (sTop !== undefined ? sTop : pTop) - TAB;
+    const finalPos = sPos || "absolute";
 
     return (
         <div
@@ -882,6 +1003,7 @@ function PuzzlePiece({ piece, imageUrl, boardW, boardH, onMouseDown, style = {},
                         <path d={pathD} />
                     </clipPath>
                 </defs>
+
                 {imageUrl ? (
                     <image
                         href={imageUrl}
@@ -895,6 +1017,7 @@ function PuzzlePiece({ piece, imageUrl, boardW, boardH, onMouseDown, style = {},
                 ) : (
                     <path d={pathD} fill={locked ? "#86efac" : "#93c5fd"} />
                 )}
+
                 {locked && !solved && (
                     <path
                         d={pathD}

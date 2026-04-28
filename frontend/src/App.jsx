@@ -23,6 +23,7 @@ function App() {
                 <Route path="/login" element={<LoginPage />} />
                 <Route path="/admin" element={<AdminPage />} />
                 <Route path="/orders" element={<OrderHistoryPage />} />
+                <Route path="/puzzle/:id" element={<CheckOutPage />} />
             </Routes>
         </BrowserRouter>
     );

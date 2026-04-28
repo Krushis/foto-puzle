@@ -79,6 +79,7 @@ namespace FotoPuzleBackend.Controllers
                     photoId = p.PhotoId,
                     difficulty = p.Difficulty.ToString(),
                     pieceCount = p.PieceCount,
+                    aspectRatio = p.AspectRatio,
                     status = p.Status.ToString(),
                     originalFilename = p.Photo.OriginalFilename,
                     filePath = p.Photo.FilePath,
