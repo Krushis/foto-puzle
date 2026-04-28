@@ -38,6 +38,7 @@ namespace FotoPuzleBackend.Migrations
 
                     b.Property<string>("Token")
                         .IsRequired()
+                        .HasMaxLength(255)
                         .HasColumnType("varchar(255)");
 
                     b.Property<int>("UserId")

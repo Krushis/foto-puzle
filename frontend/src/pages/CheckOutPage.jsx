@@ -408,7 +408,7 @@ export default function CheckOutPage() {
             if (!res.ok) throw new Error(data.message);
 
             setCreatedPuzzleId(data.id);
-
+/*
             // 🔥 iškart token
             const tokenRes = await apiFetch("/api/completiontoken/issue", {
                 method: "POST",
@@ -418,8 +418,9 @@ export default function CheckOutPage() {
             });
 
             const tokenData = await tokenRes.json();
-
-            setDiscountToken(tokenData.token);
+*/
+            //setDiscountToken(tokenData.token);
+            setDiscountToken("saved");
         } catch (err) {
             alert(err.message);
         }
@@ -545,7 +546,7 @@ export default function CheckOutPage() {
 
                 const dx = Math.abs(p.correctLeft - snapX);
                 const dy = Math.abs(p.correctTop - snapY);
-                const threshold = Math.max(8, Math.min(p.tileW, p.tileH) * 0.2);
+                const threshold = Math.max(15, Math.min(p.tileW, p.tileH) * 0.35);
 
                 if (dx <= threshold && dy <= threshold) {
                     return {
@@ -586,6 +587,8 @@ export default function CheckOutPage() {
         });
 
         const justSolved = nextPieces.every((p) => p.locked);
+        console.log("locked", nextPieces.filter(p => p.locked).length, "/", nextPieces.length);
+        console.log("justSolved", justSolved);
 
         setPieces(nextPieces);
 
