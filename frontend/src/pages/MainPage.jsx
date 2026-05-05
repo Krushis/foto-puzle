@@ -13,6 +13,7 @@ function MainPage() {
     const userName = user?.username || "Vartotojas";
 
     const [publicPuzzles, setPublicPuzzles] = useState([]);
+    const [zoomedPuzzle, setZoomedPuzzle] = useState(null);
 
     useEffect(() => {
         apiFetch("/api/puzzle/public")
@@ -82,11 +83,27 @@ function MainPage() {
                                 className="gallery-card"
                                 onClick={() => handlePuzzleClick(puzzle.puzzleId)}
                             >
-                                <img
-                                    src={getImageUrl(puzzle.filePath)}
-                                    alt={puzzle.originalFilename}
-                                    className="gallery-image"
-                                />
+                                <div className="gallery-image-wrap">
+                                    <img
+                                        src={getImageUrl(puzzle.filePath)}
+                                        alt={puzzle.originalFilename}
+                                        className="gallery-image"
+                                        onClick={(e) => {
+                                            e.stopPropagation();
+                                            setZoomedPuzzle(puzzle);
+                                        }}
+                                    />
+                                    <button
+                                        type="button"
+                                        className="gallery-zoom-button"
+                                        onClick={(e) => {
+                                            e.stopPropagation();
+                                            setZoomedPuzzle(puzzle);
+                                        }}
+                                    >
+                                        Padidinti
+                                    </button>
+                                </div>
 
                                 <div className="gallery-card-content">
                                     <h3>{puzzle.originalFilename}</h3>
@@ -99,6 +116,32 @@ function MainPage() {
                     </div>
                 )}
             </section>
+
+            {zoomedPuzzle && (
+                <div className="gallery-zoom-overlay" onClick={() => setZoomedPuzzle(null)}>
+                    <div className="gallery-zoom-dialog" onClick={(e) => e.stopPropagation()}>
+                        <button
+                            type="button"
+                            className="gallery-zoom-close"
+                            onClick={() => setZoomedPuzzle(null)}
+                            aria-label="Uždaryti"
+                        >
+                            ×
+                        </button>
+                        <img
+                            src={getImageUrl(zoomedPuzzle.filePath)}
+                            alt={zoomedPuzzle.originalFilename}
+                            className="gallery-zoom-img"
+                        />
+                        <div className="gallery-zoom-details">
+                            <strong>{zoomedPuzzle.originalFilename}</strong>
+                            <span>Autorius: {zoomedPuzzle.username}</span>
+                            <span>{zoomedPuzzle.pieceCount} detalės</span>
+                            <span>{zoomedPuzzle.aspectRatio}</span>
+                        </div>
+                    </div>
+                </div>
+            )}
         </div>
     );
 }

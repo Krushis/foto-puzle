@@ -14,8 +14,16 @@ function Navbar() {
             setIsLoggedIn(loggedIn);
             setIsAdmin(auth.isAdmin());
 
-            if (!loggedIn && window.location.pathname === "/profile") {
+            const protectedPaths = ["/profile", "/orders", "/admin"];
+            const currentPath = window.location.pathname;
+
+            if (!loggedIn && protectedPaths.includes(currentPath)) {
                 navigate("/login");
+                return;
+            }
+
+            if (currentPath === "/admin" && !auth.isAdmin()) {
+                navigate("/");
             }
         };
 
