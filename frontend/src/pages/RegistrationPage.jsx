@@ -30,7 +30,13 @@ function RegistrationPage() {
       });
 
       const text = await response.text();
-      const data = text;// ? JSON.parse(text) : null;
+      let data = {};
+
+      try {
+        data = text ? JSON.parse(text) : {};
+      } catch {
+        data = { message: text };
+      }
 
       if (response.ok) {
         setMessage(data?.message || "Registracija pavyko.");

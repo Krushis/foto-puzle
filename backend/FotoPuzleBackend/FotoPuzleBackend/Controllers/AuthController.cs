@@ -62,16 +62,19 @@ namespace FotoPuzleBackend.Controllers
         {
             try
             {
+                var email = dto.Email.Trim().ToLower();
+                var username = dto.Username.Trim();
+
                 var exists = await _context.Users.AnyAsync(u =>
-                    u.Email == dto.Email || u.Username == dto.Username);
+                    u.Email == email || u.Username == username);
 
                 if (exists)
-                    return BadRequest("User already exists");
+                    return BadRequest(new { message = "Toks vartotojas jau egzistuoja." });
 
                 var user = new Models.Entities.User
                 {
-                    Email = dto.Email.ToLower(),
-                    Username = dto.Username,
+                    Email = email,
+                    Username = username,
                     PasswordHash = BCrypt.Net.BCrypt.HashPassword(dto.Password),
                     CreatedAt = DateTime.UtcNow
                 };

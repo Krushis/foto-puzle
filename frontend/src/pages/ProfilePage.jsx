@@ -18,6 +18,7 @@ function ProfilePage() {
     const [passwordMessage, setPasswordMessage] = useState("");
     const [loading, setLoading] = useState(true);
     const [savingPassword, setSavingPassword] = useState(false);
+    const [zoomedPuzzle, setZoomedPuzzle] = useState(null);
     const navigate = useNavigate();
 
     const getImageUrl = (filePath) => {
@@ -184,11 +185,27 @@ function ProfilePage() {
                                 style={{ cursor: "pointer" }}
                             >
                                 {puzzle.filePath && (
-                                    <img
-                                        src={getImageUrl(puzzle.filePath)}
-                                        alt={puzzle.originalFilename}
-                                        className="profile-puzzle-image"
-                                    />
+                                    <div className="profile-puzzle-image-wrap">
+                                        <img
+                                            src={getImageUrl(puzzle.filePath)}
+                                            alt={puzzle.originalFilename}
+                                            className="profile-puzzle-image"
+                                            onClick={(e) => {
+                                                e.stopPropagation();
+                                                setZoomedPuzzle(puzzle);
+                                            }}
+                                        />
+                                        <button
+                                            type="button"
+                                            className="zoom-puzzle-button"
+                                            onClick={(e) => {
+                                                e.stopPropagation();
+                                                setZoomedPuzzle(puzzle);
+                                            }}
+                                        >
+                                            Padidinti
+                                        </button>
+                                    </div>
                                 )}
 
                                 <p><strong>Dėlionės ID:</strong> {puzzle.puzzleId}</p>
@@ -224,6 +241,31 @@ function ProfilePage() {
                     Grįžti į pagrindinį
                 </button>
             </div>
+
+            {zoomedPuzzle && (
+                <div className="image-zoom-overlay" onClick={() => setZoomedPuzzle(null)}>
+                    <div className="image-zoom-dialog" onClick={(e) => e.stopPropagation()}>
+                        <button
+                            type="button"
+                            className="image-zoom-close"
+                            onClick={() => setZoomedPuzzle(null)}
+                            aria-label="Uždaryti"
+                        >
+                            ×
+                        </button>
+                        <img
+                            src={getImageUrl(zoomedPuzzle.filePath)}
+                            alt={zoomedPuzzle.originalFilename}
+                            className="image-zoom-img"
+                        />
+                        <div className="image-zoom-details">
+                            <strong>{zoomedPuzzle.originalFilename}</strong>
+                            <span>{zoomedPuzzle.pieceCount} detalės</span>
+                            {zoomedPuzzle.aspectRatio && <span>{zoomedPuzzle.aspectRatio}</span>}
+                        </div>
+                    </div>
+                </div>
+            )}
         </div>
     );
 }
