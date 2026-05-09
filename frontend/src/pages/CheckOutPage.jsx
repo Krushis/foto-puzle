@@ -403,13 +403,16 @@ export default function CheckOutPage() {
                 body: formData,
             });
 
+            if (!res.ok) {
+                const text = await res.text();
+                const data = text ? JSON.parse(text) : {};
+                throw new Error(data.message || `Klaida: ${res.status}`);
+            }
+
             const data = await res.json();
 
-            if (!res.ok) throw new Error(data.message);
-
             setCreatedPuzzleId(data.id);
-/*
-            // 🔥 iškart token
+
             const tokenRes = await apiFetch("/api/completiontoken/issue", {
                 method: "POST",
                 body: JSON.stringify({
@@ -418,12 +421,22 @@ export default function CheckOutPage() {
             });
 
             const tokenData = await tokenRes.json();
-*/
-            //setDiscountToken(tokenData.token);
-            setDiscountToken("saved");
+            setDiscountToken(tokenData.token);
         } catch (err) {
             alert(err.message);
         }
+    };
+
+    const handleOrderClick = async () => {
+        const user = auth.getUser();
+        if (!user) {
+            alert("Pirmiausia prisijunkite.");
+            return;
+        }
+        if (!createdPuzzleId) {
+            await savePuzzleAndIssueToken();
+        }
+        setShowOrder(true);
     };
 
     const handleOrder = async () => {
@@ -457,6 +470,7 @@ export default function CheckOutPage() {
                     cardNumber,
                     expiration,
                     cvv,
+                    discountToken: discountToken || null,
                 }),
             });
 
@@ -681,7 +695,40 @@ export default function CheckOutPage() {
 
                     <div style={{ marginTop: 12 }}>
                         <button
-                            onClick={() => setShowOrder(true)}
+                            onClick={uploadToGallery}
+                            disabled={!createdPuzzleId}
+                            style={{
+                                padding: "8px 16px",
+                                background: "#16a34a",
+                                color: "#fff",
+                                border: "none",
+                                borderRadius: 6,
+                                cursor: "pointer",
+                                fontWeight: 600,
+                            }}
+                        >
+                            Įkelti į galeriją
+                        </button>
+                    </div>
+                </div>
+            )}
+
+            {imageUrl && boardInfo && (
+                <div
+                    style={{
+                        marginBottom: 20,
+                        padding: 16,
+                        border: "2px solid #2563eb",
+                        borderRadius: 8,
+                        background: "#c3cfe2",
+                        textAlign: "center",
+                        maxWidth: 500,
+                        width: "100%",
+                    }}
+                >
+                    {!showOrder ? (
+                        <button
+                            onClick={handleOrderClick}
                             style={{
                                 padding: "8px 16px",
                                 background: "#2563eb",
@@ -693,28 +740,9 @@ export default function CheckOutPage() {
                             }}
                         >
                             Užsakyti dėlionę
-
                         </button>
-                        <button
-                            onClick={uploadToGallery}
-                            disabled={!createdPuzzleId}
-                            style={{
-                                padding: "8px 16px",
-                                background: "#16a34a",
-                                color: "#fff",
-                                border: "none",
-                                borderRadius: 6,
-                                cursor: "pointer",
-                                fontWeight: 600,
-                                marginTop: 12,
-                            }}
-                        >
-                            Įkelti į galeriją
-                        </button>
-                    </div>
-
-                    {showOrder && (
-                        <div style={{ marginTop: 20, textAlign: "left" }}>
+                    ) : (
+                        <div style={{ textAlign: "left" }}>
                             <h3>Užsakyti dėlionę</h3>
 
                             <input
