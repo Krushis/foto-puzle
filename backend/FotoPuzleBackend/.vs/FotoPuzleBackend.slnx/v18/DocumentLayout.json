@@ -62,8 +62,7 @@
               "RelativeToolTip": "FotoPuzleBackend\\Controllers\\PuzzleLikeController.cs",
               "ViewState": "AgIAAD4AAAAAAAAAAAAgwAAAAAAAAAAAAAAAAA==",
               "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000738|",
-              "WhenOpened": "2026-05-11T21:50:46.419Z",
-              "EditorCaption": ""
+              "WhenOpened": "2026-05-11T21:50:46.419Z"
             },
             {
               "$type": "Document",
@@ -75,8 +74,7 @@
               "RelativeToolTip": "FotoPuzleBackend\\Controllers\\PuzzleController.cs",
               "ViewState": "AgIAALIAAAAAAAAAAAAYwCUAAAAwAAAAAAAAAA==",
               "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000738|",
-              "WhenOpened": "2026-05-11T21:50:24.68Z",
-              "EditorCaption": ""
+              "WhenOpened": "2026-05-11T21:50:24.68Z"
             },
             {
               "$type": "Document",
@@ -88,8 +86,7 @@
               "RelativeToolTip": "FotoPuzleBackend\\Controllers\\AuthController.cs",
               "ViewState": "AgIAAGsAAAAAAAAAAAAAwEoAAAAeAAAAAAAAAA==",
               "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000738|",
-              "WhenOpened": "2026-05-11T21:48:11.698Z",
-              "EditorCaption": ""
+              "WhenOpened": "2026-05-11T21:48:11.698Z"
             },
             {
               "$type": "Document",
@@ -101,8 +98,7 @@
               "RelativeToolTip": "FotoPuzleBackend\\Program.cs",
               "ViewState": "AgIAAC4AAAAAAAAAAAAAADwAAAAtAAAAAAAAAA==",
               "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000738|",
-              "WhenOpened": "2026-05-11T21:45:57.626Z",
-              "EditorCaption": ""
+              "WhenOpened": "2026-05-11T21:45:57.626Z"
             },
             {
               "$type": "Document",
@@ -114,8 +110,7 @@
               "RelativeToolTip": "FotoPuzleBackend\\Middleware\\ErrorHandlingMiddleware.cs",
               "ViewState": "AgIAACYAAAAAAAAAAAAgwAgAAABCAAAAAAAAAA==",
               "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000738|",
-              "WhenOpened": "2026-05-11T21:31:32.376Z",
-              "EditorCaption": ""
+              "WhenOpened": "2026-05-11T21:31:32.376Z"
             },
             {
               "$type": "Document",
@@ -125,7 +120,7 @@
               "RelativeDocumentMoniker": "FotoPuzleBackend\\Controllers\\UserController.cs",
               "ToolTip": "C:\\Users\\Lukas\\Documents\\Programming\\foto-puzle\\foto-puzle\\backend\\FotoPuzleBackend\\FotoPuzleBackend\\Controllers\\UserController.cs",
               "RelativeToolTip": "FotoPuzleBackend\\Controllers\\UserController.cs",
-              "ViewState": "AgIAAJUAAAAAAAAAAAAgwKcAAAAYAAAAAAAAAA==",
+              "ViewState": "AgIAAJUAAAAAAAAAAAAgwJ0AAAAeAAAAAAAAAA==",
               "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000738|",
               "WhenOpened": "2026-04-26T16:03:52.243Z",
               "EditorCaption": ""
@@ -140,8 +135,7 @@
               "RelativeToolTip": "FotoPuzleBackend\\appsettings.Development.json",
               "ViewState": "AgIAAAAAAAAAAAAAAAAAAAsAAAAAAAAAAAAAAA==",
               "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.001642|",
-              "WhenOpened": "2026-05-11T20:41:46.364Z",
-              "EditorCaption": ""
+              "WhenOpened": "2026-05-11T20:41:46.364Z"
             },
             {
               "$type": "Document",
@@ -153,8 +147,7 @@
               "RelativeToolTip": "FotoPuzleBackend\\Controllers\\OrderController.cs",
               "ViewState": "AgIAAAAAAAAAAAAAAAAAAD4AAAA6AAAAAAAAAA==",
               "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000738|",
-              "WhenOpened": "2026-04-26T15:53:31.594Z",
-              "EditorCaption": ""
+              "WhenOpened": "2026-04-26T15:53:31.594Z"
             },
             {
               "$type": "Document",
@@ -166,8 +159,7 @@
               "RelativeToolTip": "FotoPuzleBackend\\Controllers\\CompletionTokenController.cs",
               "ViewState": "AgIAACQAAAAAAAAAAAAgwDUAAAAvAAAAAAAAAA==",
               "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000738|",
-              "WhenOpened": "2026-05-11T20:37:18.162Z",
-              "EditorCaption": ""
+              "WhenOpened": "2026-05-11T20:37:18.162Z"
             },
             {
               "$type": "Document",
@@ -179,8 +171,7 @@
               "RelativeToolTip": "FotoPuzleBackend\\appsettings.json",
               "ViewState": "AgIAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA==",
               "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.001642|",
-              "WhenOpened": "2026-05-11T20:41:50.864Z",
-              "EditorCaption": ""
+              "WhenOpened": "2026-05-11T20:41:50.864Z"
             }
           ]
         },
