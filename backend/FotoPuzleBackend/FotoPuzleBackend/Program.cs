@@ -1,4 +1,5 @@
 using FotoPuzleBackend.Data;
+using FotoPuzleBackend.Middleware;
 using FotoPuzleBackend.Services;
 using Microsoft.AspNetCore.Authentication.JwtBearer;
 using Microsoft.EntityFrameworkCore;
@@ -56,6 +57,8 @@ var app = builder.Build();
 app.UseCors("AllowFrontend");
 
 app.UseStaticFiles();
+
+app.UseMiddleware<ErrorHandlingMiddleware>();
 
 app.UseAuthentication();
 app.UseAuthorization();

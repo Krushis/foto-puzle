@@ -60,35 +60,30 @@ namespace FotoPuzleBackend.Controllers
         [HttpPost("register")]
         public async Task<IActionResult> Register([FromBody] RegisterDTO dto)
         {
-            try
+         
+            var email = dto.Email.Trim().ToLower();
+            var username = dto.Username.Trim();
+
+            var exists = await _context.Users.AnyAsync(u =>
+                u.Email == email || u.Username == username);
+
+            if (exists)
+                return BadRequest(new { message = "Toks vartotojas jau egzistuoja." });
+
+            var user = new Models.Entities.User
             {
-                var email = dto.Email.Trim().ToLower();
-                var username = dto.Username.Trim();
+                Email = email,
+                Username = username,
+                PasswordHash = BCrypt.Net.BCrypt.HashPassword(dto.Password),
+                CreatedAt = DateTime.UtcNow
+            };
 
-                var exists = await _context.Users.AnyAsync(u =>
-                    u.Email == email || u.Username == username);
+            _context.Users.Add(user);
+            await _context.SaveChangesAsync();
 
-                if (exists)
-                    return BadRequest(new { message = "Toks vartotojas jau egzistuoja." });
-
-                var user = new Models.Entities.User
-                {
-                    Email = email,
-                    Username = username,
-                    PasswordHash = BCrypt.Net.BCrypt.HashPassword(dto.Password),
-                    CreatedAt = DateTime.UtcNow
-                };
-
-                _context.Users.Add(user);
-                await _context.SaveChangesAsync();
-
-                return Ok(new { message = "Registracija sėkminga" });
-            }
-            catch (Exception ex)
-            {
-                _logger.LogError(ex, "Error in Register");
-                return StatusCode(500, new { message = ex.Message });
-            }
+            return Ok(new { message = "Registracija sėkminga" });
+            
+            
         }
 
         // token generator - siaip bloga praktika sita controlleryje laikyti bet px
