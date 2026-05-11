@@ -153,12 +153,11 @@ function createPieces(imageUrl, rows, cols, boardW, boardH) {
 
 export default function CheckOutPage() {
     const { id } = useParams();
+
     const [pieces, setPieces] = useState([]);
     const [boardInfo, setBoardInfo] = useState(null);
     const [imageUrl, setImageUrl] = useState(null);
     const [assetSize, setAssetSize] = useState({ w: 0, h: 0 });
-
-    
 
     const [selectedRatio, setSelectedRatio] = useState("1:1");
     const [options, setOptions] = useState(ratioConfig["1:1"].pieces);
@@ -202,6 +201,10 @@ export default function CheckOutPage() {
         return { width, height };
     }
 
+    const getPuzzleIdFromResponse = (data) => {
+        return data?.id ?? data?.puzzleId ?? data?.PuzzleId ?? data?.ID ?? null;
+    };
+
     const buildPuzzle = (count, assetW, assetH, url, ratioValue) => {
         const { width: boardW, height: boardH } = getBoardSize(ratioValue);
         const grid = chooseGrid(count, ratioValue);
@@ -224,63 +227,76 @@ export default function CheckOutPage() {
         setDiscountToken(null);
         setShowOrder(false);
         setOrderMessage("");
-        setCreatedPuzzleId(null);
         setMessage("Sudėkite puzlę ir gaukite prizą!");
     };
 
     useEffect(() => {
-    if (!id) return;
+        if (!id) return;
 
-    apiFetch(`/api/puzzle/${id}`)
-        .then(async (res) => {
-            if (!res.ok) {
-                throw new Error("Nepavyko įkelti dėlionės");
-            }
+        apiFetch(`/api/puzzle/${id}`)
+            .then(async (res) => {
+                const text = await res.text();
+                const data = text ? JSON.parse(text) : {};
 
-            return await res.json();
-        })
-        .then((data) => {
-            const ratioKey = data.aspectRatio || "1:1";
-            const ratio = ratioConfig[ratioKey];
+                if (!res.ok) {
+                    throw new Error(data.message || "Puzzle not found");
+                }
 
-            if (!ratio) {
-                throw new Error("Blogas dėlionės santykis");
-            }
+                return data;
+            })
+            .then((data) => {
+                console.log("LOADED PUZZLE:", data);
 
-            const fullImageUrl = `${API_BASE_URL}${data.filePath}`;
+                const ratioKey = data.aspectRatio || data.AspectRatio || "1:1";
+                const ratio = ratioConfig[ratioKey];
 
-            setSelectedRatio(ratioKey);
-            setSelectedCount(data.pieceCount);
-            setOptions(ratio.pieces);
-            setImageUrl(fullImageUrl);
-            setUploadedFileName(data.originalFilename);
-            setSelectedFile(null);
-            setCreatedPuzzleId(data.puzzleId);
-            setMessage("Sudėkite išsaugotą puzlę iš naujo!");
+                if (!ratio) {
+                    throw new Error("Blogas dėlionės santykis");
+                }
 
-            const img = new Image();
+                const filePath = data.filePath || data.FilePath;
+                const fullImageUrl = filePath?.startsWith("http")
+                    ? filePath
+                    : `${API_BASE_URL}${filePath}`;
 
-            img.onload = () => {
-                setAssetSize({ w: img.width, h: img.height });
+                const loadedPuzzleId = getPuzzleIdFromResponse(data) ?? id;
 
-                buildPuzzle(
-                    data.pieceCount,
-                    img.width,
-                    img.height,
-                    fullImageUrl,
-                    ratio.value
-                );
-            };
+                setSelectedRatio(ratioKey);
+                setSelectedCount(data.pieceCount || data.PieceCount);
+                setOptions(ratio.pieces);
+                setImageUrl(fullImageUrl);
+                setUploadedFileName(data.originalFilename || data.OriginalFilename || "");
+                setSelectedFile(null);
+                setCreatedPuzzleId(loadedPuzzleId);
+                setMessage("Sudėkite išsaugotą puzlę iš naujo!");
 
-            img.src = fullImageUrl;
-        })
-        .catch((err) => {
-            console.error(err);
-            alert(err.message || "Nepavyko įkelti dėlionės.");
-        });
-        }, [id]);   
+                const img = new Image();
+
+                img.onload = () => {
+                    setAssetSize({ w: img.width, h: img.height });
+
+                    buildPuzzle(
+                        data.pieceCount || data.PieceCount,
+                        img.width,
+                        img.height,
+                        fullImageUrl,
+                        ratio.value
+                    );
+
+                    setCreatedPuzzleId(loadedPuzzleId);
+                };
+
+                img.src = fullImageUrl;
+            })
+            .catch((err) => {
+                console.error(err);
+                alert(err.message || "Nepavyko įkelti dėlionės.");
+            });
+    }, [id]);
 
     const shuffleUnsolved = () => {
+        if (!trayRef.current) return;
+
         const trayRect = trayRef.current.getBoundingClientRect();
 
         setPieces((prev) =>
@@ -289,8 +305,8 @@ export default function CheckOutPage() {
 
                 return {
                     ...p,
-                    left: Math.random() * (trayRect.width - p.tileW),
-                    top: Math.random() * (trayRect.height - p.tileH),
+                    left: Math.random() * Math.max(0, trayRect.width - p.tileW),
+                    top: Math.random() * Math.max(0, trayRect.height - p.tileH),
                     onBoard: false,
                 };
             })
@@ -312,6 +328,10 @@ export default function CheckOutPage() {
 
         setUploadedFileName(file.name);
         setSelectedFile(file);
+        setCreatedPuzzleId(null);
+        setDiscountToken(null);
+        setShowOrder(false);
+        setOrderMessage("");
 
         const url = URL.createObjectURL(file);
 
@@ -335,6 +355,9 @@ export default function CheckOutPage() {
     const handleCountChange = (e) => {
         const count = Number(e.target.value);
         setSelectedCount(count);
+        setCreatedPuzzleId(null);
+        setDiscountToken(null);
+        setShowOrder(false);
 
         if (imageUrl && assetSize.w) {
             buildPuzzle(
@@ -347,20 +370,22 @@ export default function CheckOutPage() {
         }
     };
 
-    const startDrag = (e, id, fromBoard) => {
+    const startDrag = (e, pieceId, fromBoard) => {
         e.preventDefault();
 
-        const piece = pieces.find((p) => p.id === id);
+        const piece = pieces.find((p) => p.id === pieceId);
         if (!piece || piece.locked) return;
 
         const containerRef = fromBoard ? boardRef : trayRef;
+        if (!containerRef.current) return;
+
         const rect = containerRef.current.getBoundingClientRect();
 
         const offsetX = e.clientX - (rect.left + piece.left);
         const offsetY = e.clientY - (rect.top + piece.top);
 
-        drag.current = { id, fromBoard, offsetX, offsetY };
-        setFloater({ id, pageX: e.clientX, pageY: e.clientY });
+        drag.current = { id: pieceId, fromBoard, offsetX, offsetY };
+        setFloater({ id: pieceId, pageX: e.clientX, pageY: e.clientY });
     };
 
     const onMouseMove = (e) => {
@@ -368,31 +393,71 @@ export default function CheckOutPage() {
         setFloater({ id: drag.current.id, pageX: e.clientX, pageY: e.clientY });
     };
 
+    const issueToken = async (puzzleId) => {
+        const tokenRes = await apiFetch("/api/completiontoken/issue", {
+            method: "POST",
+            body: JSON.stringify({
+                puzzleId,
+            }),
+        });
+
+        const text = await tokenRes.text();
+        const tokenData = text ? JSON.parse(text) : {};
+
+        if (!tokenRes.ok) {
+            throw new Error(tokenData.message || "Nepavyko išduoti nuolaidos žetono");
+        }
+
+        const token = tokenData.token ?? tokenData.Token ?? null;
+        setDiscountToken(token);
+
+        return token;
+    };
+
     const savePuzzleAndIssueToken = async () => {
         const user = auth.getUser();
 
         if (!user) {
             alert("Pirmiausia prisijunkite.");
-            return;
+            return null;
         }
 
-        // 🔥 jei jau egzistuojantis puzzle (replay)
+        if (createdPuzzleId) {
+            if (!discountToken) {
+                try {
+                    await issueToken(createdPuzzleId);
+                } catch (err) {
+                    console.warn(err);
+                }
+            }
+
+            return createdPuzzleId;
+        }
+
         if (id) {
-            setCreatedPuzzleId(Number(id));
-            setDiscountToken("replay-token");
-            setRewardClaimed(false);
-            return;
+            const existingId = id;
+            setCreatedPuzzleId(existingId);
+
+            if (!discountToken) {
+                try {
+                    await issueToken(existingId);
+                } catch (err) {
+                    console.warn(err);
+                    setDiscountToken("replay-token");
+                }
+            }
+
+            return existingId;
         }
 
-        // 🔥 tik naujam puzzle reikia image
         if (!selectedFile) {
             alert("Nuotrauka nepasirinkta.");
-            return;
+            return null;
         }
 
         try {
             const formData = new FormData();
-            formData.append("userId", user.userId);
+            formData.append("userId", user.userId ?? user.id ?? user.UserId);
             formData.append("pieceCount", selectedCount);
             formData.append("aspectRatio", selectedRatio);
             formData.append("originalFilename", uploadedFileName || selectedFile.name);
@@ -403,39 +468,52 @@ export default function CheckOutPage() {
                 body: formData,
             });
 
+            const text = await res.text();
+            const data = text ? JSON.parse(text) : {};
+
+            console.log("CREATE PUZZLE RESPONSE:", data);
+
             if (!res.ok) {
-                const text = await res.text();
-                const data = text ? JSON.parse(text) : {};
-                throw new Error(data.message || `Klaida: ${res.status}`);
+                throw new Error(data.message || data.Message || `Klaida: ${res.status}`);
             }
 
-            const data = await res.json();
+            const newPuzzleId = getPuzzleIdFromResponse(data);
 
-            setCreatedPuzzleId(data.id);
+            if (!newPuzzleId) {
+                throw new Error("Backend negrąžino puzzle ID. Patikrink /api/puzzle/create response.");
+            }
 
-            const tokenRes = await apiFetch("/api/completiontoken/issue", {
-                method: "POST",
-                body: JSON.stringify({
-                    puzzleId: data.id,
-                }),
-            });
+            setCreatedPuzzleId(newPuzzleId);
 
-            const tokenData = await tokenRes.json();
-            setDiscountToken(tokenData.token);
+            try {
+                await issueToken(newPuzzleId);
+            } catch (err) {
+                console.warn("Token issue failed:", err);
+            }
+
+            return newPuzzleId;
         } catch (err) {
             alert(err.message);
+            return null;
         }
     };
 
     const handleOrderClick = async () => {
         const user = auth.getUser();
+
         if (!user) {
             alert("Pirmiausia prisijunkite.");
             return;
         }
-        if (!createdPuzzleId) {
-            await savePuzzleAndIssueToken();
+
+        let puzzleId = createdPuzzleId;
+
+        if (!puzzleId) {
+            puzzleId = await savePuzzleAndIssueToken();
         }
+
+        if (!puzzleId) return;
+
         setShowOrder(true);
     };
 
@@ -447,7 +525,13 @@ export default function CheckOutPage() {
             return;
         }
 
-        if (!createdPuzzleId) {
+        let puzzleId = createdPuzzleId;
+
+        if (!puzzleId) {
+            puzzleId = await savePuzzleAndIssueToken();
+        }
+
+        if (!puzzleId) {
             alert("Pirmiausia reikia išsaugoti dėlionę.");
             return;
         }
@@ -464,8 +548,8 @@ export default function CheckOutPage() {
             const response = await apiFetch("/api/order", {
                 method: "POST",
                 body: JSON.stringify({
-                    userId: user.userId,
-                    puzzleId: createdPuzzleId,
+                    userId: user.userId ?? user.id ?? user.UserId,
+                    puzzleId,
                     fullName,
                     cardNumber,
                     expiration,
@@ -483,40 +567,44 @@ export default function CheckOutPage() {
                 throw new Error(text || "Server returned invalid response");
             }
 
+            console.log("ORDER RESPONSE:", data);
+
             if (!response.ok) {
-                throw new Error(data.message || "Užsakymas nepavyko");
+                throw new Error(data.message || data.Message || "Užsakymas nepavyko");
             }
 
-            setOrderMessage(`✅ ${data.message}. Užsakymo ID: ${data.orderId}`);
+            setOrderMessage(`✅ ${data.message || data.Message || "Užsakymas sukurtas"}. Užsakymo ID: ${data.orderId ?? data.OrderId}`);
         } catch (error) {
             setOrderMessage(`❌ ${error.message}`);
+            alert(error.message);
         } finally {
             setOrdering(false);
         }
     };
 
     const uploadToGallery = async () => {
-            if (!createdPuzzleId) {
-                alert("Pirmiausia reikia išsaugoti dėlionę.");
-                return;
+        if (!createdPuzzleId) {
+            alert("Pirmiausia reikia išsaugoti dėlionę.");
+            return;
+        }
+
+        try {
+            const response = await apiFetch(`/api/puzzle/${createdPuzzleId}/public`, {
+                method: "PUT",
+            });
+
+            const text = await response.text();
+            const data = text ? JSON.parse(text) : {};
+
+            if (!response.ok) {
+                throw new Error(data.message || data.Message || "Nepavyko įkelti į galeriją.");
             }
 
-            try {
-                const response = await apiFetch(`/api/puzzle/${createdPuzzleId}/public`, {
-                    method: "PUT",
-                });
-
-                const data = await response.json();
-
-                if (!response.ok) {
-                    throw new Error(data.message || "Nepavyko įkelti į galeriją.");
-                }
-
-                alert(data.message);
-            } catch (err) {
-                alert(err.message);
-            }
-        };
+            alert(data.message || data.Message || "Įkelta į galeriją");
+        } catch (err) {
+            alert(err.message);
+        }
+    };
 
     const onMouseUp = (e) => {
         if (!drag.current) {
@@ -524,11 +612,11 @@ export default function CheckOutPage() {
             return;
         }
 
-        const { id, offsetX, offsetY } = drag.current;
+        const { id: draggedPieceId, offsetX, offsetY } = drag.current;
         drag.current = null;
 
-        const piece = pieces.find((p) => p.id === id);
-        if (!piece) {
+        const piece = pieces.find((p) => p.id === draggedPieceId);
+        if (!piece || !boardRef.current || !trayRef.current) {
             setFloater(null);
             return;
         }
@@ -549,7 +637,7 @@ export default function CheckOutPage() {
             centrePY <= boardRect.bottom;
 
         const nextPieces = pieces.map((p) => {
-            if (p.id !== id) return p;
+            if (p.id !== draggedPieceId) return p;
 
             if (overBoard) {
                 const localX = piecePageX - boardRect.left;
@@ -600,8 +688,9 @@ export default function CheckOutPage() {
             };
         });
 
-        const justSolved = nextPieces.every((p) => p.locked);
-        console.log("locked", nextPieces.filter(p => p.locked).length, "/", nextPieces.length);
+        const justSolved = nextPieces.length > 0 && nextPieces.every((p) => p.locked);
+
+        console.log("locked", nextPieces.filter((p) => p.locked).length, "/", nextPieces.length);
         console.log("justSolved", justSolved);
 
         setPieces(nextPieces);
@@ -609,14 +698,7 @@ export default function CheckOutPage() {
         if (justSolved) {
             setMessage("Puzlė sudėta sėkmingai!");
             setSolved(true);
-
-            if (!id) {
-                savePuzzleAndIssueToken();
-            } else {
-                setCreatedPuzzleId(Number(id));
-                setDiscountToken("replay-token");
-                setRewardClaimed(false);
-            }
+            savePuzzleAndIssueToken();
         }
 
         setFloater(null);
@@ -671,9 +753,7 @@ export default function CheckOutPage() {
                     <button
                         onClick={() => {
                             setRewardClaimed(true);
-                            alert(
-                                "Prizas atsiimtas! Jūsų profilis papildytas 5% nuolaidos žetonu, jį galite panaudoti kitam apsipirkimui."
-                            );
+                            alert("Prizas atsiimtas!");
                         }}
                         disabled={rewardClaimed || !discountToken}
                         style={{
@@ -703,7 +783,7 @@ export default function CheckOutPage() {
                                 color: "#fff",
                                 border: "none",
                                 borderRadius: 6,
-                                cursor: "pointer",
+                                cursor: createdPuzzleId ? "pointer" : "not-allowed",
                                 fontWeight: 600,
                             }}
                         >
@@ -806,11 +886,11 @@ export default function CheckOutPage() {
                                 disabled={ordering}
                                 style={{
                                     padding: "8px 16px",
-                                    background: "#2563eb",
+                                    background: ordering ? "#9ca3af" : "#2563eb",
                                     color: "#fff",
                                     border: "none",
                                     borderRadius: 6,
-                                    cursor: "pointer",
+                                    cursor: ordering ? "not-allowed" : "pointer",
                                     fontWeight: 600,
                                 }}
                             >
@@ -839,9 +919,6 @@ export default function CheckOutPage() {
                     <label style={{ fontWeight: 600 }}>
                         Santykis&nbsp;
                         <select value={selectedRatio} onChange={handleRatioChange}>
-                            <option value="" disabled>
-                                Pasirinkite
-                            </option>
                             {Object.keys(ratioConfig).map((k) => (
                                 <option key={k} value={k}>
                                     {k}
@@ -851,17 +928,10 @@ export default function CheckOutPage() {
                     </label>
 
                     <label
-                        onClick={(e) => {
-                            if (!selectedRatio) {
-                                e.preventDefault();
-                                alert("Pirmiausia pasirinkite santykį");
-                            }
-                        }}
                         style={{
                             fontWeight: 600,
-                            cursor: selectedRatio ? "pointer" : "not-allowed",
-                            color: selectedRatio ? "#1d4ed8" : "#9ca3af",
-                            opacity: selectedRatio ? 1 : 0.5,
+                            cursor: "pointer",
+                            color: "#1d4ed8",
                         }}
                     >
                         Pasirinkite nuotrauką&nbsp;
@@ -870,10 +940,9 @@ export default function CheckOutPage() {
                             accept="image/*"
                             onChange={handleFile}
                             style={{ display: "none" }}
-                            disabled={!selectedRatio}
                         />
                     </label>
-                    
+
                     {imageUrl && (
                         <label style={{ fontWeight: 600 }}>
                             Detalių skaičius&nbsp;
@@ -889,7 +958,7 @@ export default function CheckOutPage() {
 
                     {boardInfo && (
                         <button
-                            onClick={() => shuffleUnsolved()}
+                            onClick={shuffleUnsolved}
                             style={{ padding: "4px 14px", cursor: "pointer" }}
                         >
                             Sumaišyti nesudėtas detales

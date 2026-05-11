@@ -207,6 +207,35 @@ namespace FotoPuzleBackend.Migrations
                     b.ToTable("Puzzles");
                 });
 
+            modelBuilder.Entity("FotoPuzleBackend.Models.Entities.PuzzleLike", b =>
+                {
+                    b.Property<int>("Id")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("int");
+
+                    MySqlPropertyBuilderExtensions.UseMySqlIdentityColumn(b.Property<int>("Id"));
+
+                    b.Property<DateTime>("CreatedAt")
+                        .HasColumnType("datetime(6)");
+
+                    b.Property<int>("PuzzleId")
+                        .HasColumnType("int");
+
+                    b.Property<int>("UserId")
+                        .HasColumnType("int");
+
+                    b.HasKey("Id");
+
+                    b.HasIndex("PuzzleId");
+
+                    b.HasIndex("UserId");
+
+                    b.HasIndex("UserId", "PuzzleId")
+                        .IsUnique();
+
+                    b.ToTable("PuzzleLikes");
+                });
+
             modelBuilder.Entity("FotoPuzleBackend.Models.Entities.User", b =>
                 {
                     b.Property<int>("Id")
@@ -307,6 +336,25 @@ namespace FotoPuzleBackend.Migrations
                         .IsRequired();
 
                     b.Navigation("Photo");
+
+                    b.Navigation("User");
+                });
+
+            modelBuilder.Entity("FotoPuzleBackend.Models.Entities.PuzzleLike", b =>
+                {
+                    b.HasOne("FotoPuzleBackend.Models.Entities.Puzzle", "Puzzle")
+                        .WithMany()
+                        .HasForeignKey("PuzzleId")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
+
+                    b.HasOne("FotoPuzleBackend.Models.Entities.User", "User")
+                        .WithMany()
+                        .HasForeignKey("UserId")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
+
+                    b.Navigation("Puzzle");
 
                     b.Navigation("User");
                 });

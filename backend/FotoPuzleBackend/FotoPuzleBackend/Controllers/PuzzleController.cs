@@ -1,7 +1,7 @@
 using FotoPuzleBackend.Data;
 using FotoPuzleBackend.Models.Entities;
 using Microsoft.AspNetCore.Mvc;
-using FotoPuzleBackend.Models.DTO;  
+using FotoPuzleBackend.Models.DTO;
 using Microsoft.EntityFrameworkCore;
 
 namespace FotoPuzleBackend.Controllers
@@ -93,10 +93,13 @@ namespace FotoPuzleBackend.Controllers
                 return Ok(new
                 {
                     id = puzzle.Id,
+                    puzzleId = puzzle.Id,
                     userId = puzzle.UserId,
                     photoId = photo.Id,
                     pieceCount = puzzle.PieceCount,
                     aspectRatio = puzzle.AspectRatio,
+                    filePath = photo.FilePath,
+                    originalFilename = photo.OriginalFilename,
                     createdAt = puzzle.CreatedAt
                 });
             }
@@ -115,7 +118,9 @@ namespace FotoPuzleBackend.Controllers
                 .FirstOrDefaultAsync(p => p.Id == id);
 
             if (puzzle == null)
+            {
                 return NotFound(new { message = "Puzzle not found" });
+            }
 
             puzzle.Photo.IsPublic = true;
             puzzle.Photo.UpdatedAt = DateTime.UtcNow;
@@ -126,23 +131,32 @@ namespace FotoPuzleBackend.Controllers
         }
 
         [HttpGet("public")]
-        public async Task<IActionResult> GetPublicPuzzles()
+        public async Task<IActionResult> GetPublicPuzzles([FromQuery] int? userId)
         {
             var puzzles = await _context.Puzzles
                 .Include(p => p.Photo)
                 .Include(p => p.User)
                 .Where(p => p.Photo.IsPublic)
-                .OrderByDescending(p => p.CreatedAt)
                 .Select(p => new
                 {
                     puzzleId = p.Id,
+                    id = p.Id,
                     username = p.User.Username,
                     pieceCount = p.PieceCount,
                     aspectRatio = p.AspectRatio,
                     filePath = p.Photo.FilePath,
                     originalFilename = p.Photo.OriginalFilename,
-                    createdAt = p.CreatedAt
+                    createdAt = p.CreatedAt,
+
+                    likesCount = _context.PuzzleLikes
+                        .Count(pl => pl.PuzzleId == p.Id),
+
+                    isLikedByCurrentUser = userId.HasValue &&
+                        _context.PuzzleLikes
+                            .Any(pl => pl.PuzzleId == p.Id && pl.UserId == userId.Value)
                 })
+                .OrderByDescending(p => p.likesCount)
+                .ThenByDescending(p => p.createdAt)
                 .ToListAsync();
 
             return Ok(puzzles);
@@ -157,18 +171,24 @@ namespace FotoPuzleBackend.Controllers
                 .Select(p => new
                 {
                     puzzleId = p.Id,
+                    id = p.Id,
                     photoId = p.PhotoId,
                     userId = p.UserId,
                     pieceCount = p.PieceCount,
                     aspectRatio = p.AspectRatio,
                     filePath = p.Photo.FilePath,
                     originalFilename = p.Photo.OriginalFilename,
-                    status = p.Status.ToString()
+                    status = p.Status.ToString(),
+
+                    likesCount = _context.PuzzleLikes
+                        .Count(pl => pl.PuzzleId == p.Id)
                 })
                 .FirstOrDefaultAsync();
 
             if (puzzle == null)
-                return NotFound();
+            {
+                return NotFound(new { message = "Puzzle not found" });
+            }
 
             return Ok(puzzle);
         }

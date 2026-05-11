@@ -15,21 +15,41 @@ function MainPage() {
     const [publicPuzzles, setPublicPuzzles] = useState([]);
     const [zoomedPuzzle, setZoomedPuzzle] = useState(null);
 
-    useEffect(() => {
-        apiFetch("/api/puzzle/public")
-            .then(async (res) => {
-                if (!res.ok) throw new Error("Nepavyko įkelti galerijos");
-                return await res.json();
-            })
-            .then((data) => setPublicPuzzles(data))
-            .catch((err) => console.error(err));
-    }, []);
+    const getUserId = () => {
+        const currentUser = auth.getUser();
+        return currentUser?.userId ?? currentUser?.id ?? currentUser?.UserId;
+    };
+
+    const getPuzzleId = (puzzle) => {
+        return puzzle?.puzzleId ?? puzzle?.id ?? puzzle?.PuzzleId ?? puzzle?.Id;
+    };
 
     const getImageUrl = (filePath) => {
         if (!filePath) return "";
         if (filePath.startsWith("http")) return filePath;
         return `${API_BASE_URL}${filePath}`;
     };
+
+    const loadPublicPuzzles = async () => {
+        try {
+            const userId = getUserId() || "";
+
+            const res = await apiFetch(`/api/puzzle/public?userId=${userId}`);
+
+            if (!res.ok) {
+                throw new Error("Nepavyko įkelti galerijos");
+            }
+
+            const data = await res.json();
+            setPublicPuzzles(data);
+        } catch (err) {
+            console.error(err);
+        }
+    };
+
+    useEffect(() => {
+        loadPublicPuzzles();
+    }, []);
 
     const handlePuzzleClick = (puzzleId) => {
         if (!auth.isLoggedIn()) {
@@ -39,6 +59,100 @@ function MainPage() {
         }
 
         navigate(`/puzzle/${puzzleId}`);
+    };
+
+    const likePuzzle = async (puzzleId) => {
+        const userId = getUserId();
+
+        if (!userId) {
+            alert("Pirmiausia prisijunkite.");
+            navigate("/login");
+            return;
+        }
+
+        try {
+            const res = await apiFetch(`/api/puzzle-like/${puzzleId}`, {
+                method: "POST",
+                body: JSON.stringify({ userId }),
+            });
+
+            const data = await res.json();
+
+            if (!res.ok) {
+                alert(data.message || "Nepavyko palaikinti.");
+                return;
+            }
+
+            setPublicPuzzles((prev) =>
+                prev.map((p) =>
+                    getPuzzleId(p) === puzzleId
+                        ? {
+                              ...p,
+                              likesCount: data.likesCount ?? data.LikesCount ?? 0,
+                              isLikedByCurrentUser: true,
+                          }
+                        : p
+                )
+            );
+        } catch (err) {
+            console.error(err);
+            alert("Klaida spaudžiant like.");
+        }
+    };
+
+    const unlikePuzzle = async (puzzleId) => {
+        const userId = getUserId();
+
+        if (!userId) {
+            alert("Pirmiausia prisijunkite.");
+            navigate("/login");
+            return;
+        }
+
+        try {
+            const res = await apiFetch(`/api/puzzle-like/${puzzleId}/${userId}`, {
+                method: "DELETE",
+            });
+
+            const data = await res.json();
+
+            if (!res.ok) {
+                alert(data.message || "Nepavyko nuimti like.");
+                return;
+            }
+
+            setPublicPuzzles((prev) =>
+                prev.map((p) =>
+                    getPuzzleId(p) === puzzleId
+                        ? {
+                              ...p,
+                              likesCount: data.likesCount ?? data.LikesCount ?? 0,
+                              isLikedByCurrentUser: false,
+                          }
+                        : p
+                )
+            );
+        } catch (err) {
+            console.error(err);
+            alert("Klaida nuimant like.");
+        }
+    };
+
+    const toggleLike = (e, puzzle) => {
+        e.stopPropagation();
+
+        const puzzleId = getPuzzleId(puzzle);
+
+        if (!puzzleId) {
+            alert("Nerastas puzzle ID.");
+            return;
+        }
+
+        if (puzzle.isLikedByCurrentUser) {
+            unlikePuzzle(puzzleId);
+        } else {
+            likePuzzle(puzzleId);
+        }
     };
 
     return (
@@ -69,6 +183,7 @@ function MainPage() {
 
             <section className="gallery-section">
                 <h2>Puzlių galerija</h2>
+
                 <p className="gallery-description">
                     Peržiūrėkite kitų naudotojų viešai įkeltas dėliones.
                 </p>
@@ -77,49 +192,69 @@ function MainPage() {
                     <p>Galerijoje dar nėra viešų dėlionių.</p>
                 ) : (
                     <div className="gallery-grid">
-                        {publicPuzzles.map((puzzle) => (
-                            <div
-                                key={puzzle.puzzleId}
-                                className="gallery-card"
-                                onClick={() => handlePuzzleClick(puzzle.puzzleId)}
-                            >
-                                <div className="gallery-image-wrap">
-                                    <img
-                                        src={getImageUrl(puzzle.filePath)}
-                                        alt={puzzle.originalFilename}
-                                        className="gallery-image"
-                                        onClick={(e) => {
-                                            e.stopPropagation();
-                                            setZoomedPuzzle(puzzle);
-                                        }}
-                                    />
-                                    <button
-                                        type="button"
-                                        className="gallery-zoom-button"
-                                        onClick={(e) => {
-                                            e.stopPropagation();
-                                            setZoomedPuzzle(puzzle);
-                                        }}
-                                    >
-                                        Padidinti
-                                    </button>
-                                </div>
+                        {publicPuzzles.map((puzzle) => {
+                            const puzzleId = getPuzzleId(puzzle);
 
-                                <div className="gallery-card-content">
-                                    <h3>{puzzle.originalFilename}</h3>
-                                    <p>Autorius: {puzzle.username}</p>
-                                    <p>Detalės: {puzzle.pieceCount}</p>
-                                    <p>Santykis: {puzzle.aspectRatio}</p>
+                            return (
+                                <div
+                                    key={puzzleId}
+                                    className="gallery-card"
+                                    onClick={() => handlePuzzleClick(puzzleId)}
+                                >
+                                    <div className="gallery-image-wrap">
+                                        <img
+                                            src={getImageUrl(puzzle.filePath)}
+                                            alt={puzzle.originalFilename}
+                                            className="gallery-image"
+                                            onClick={(e) => {
+                                                e.stopPropagation();
+                                                setZoomedPuzzle(puzzle);
+                                            }}
+                                        />
+
+                                        <button
+                                            type="button"
+                                            className="gallery-zoom-button"
+                                            onClick={(e) => {
+                                                e.stopPropagation();
+                                                setZoomedPuzzle(puzzle);
+                                            }}
+                                        >
+                                            Padidinti
+                                        </button>
+                                    </div>
+
+                                    <div className="gallery-card-content">
+                                        <h3>{puzzle.originalFilename}</h3>
+                                        <p>Autorius: {puzzle.username}</p>
+                                        <p>Detalės: {puzzle.pieceCount}</p>
+                                        <p>Santykis: {puzzle.aspectRatio}</p>
+
+                                        <button
+                                            type="button"
+                                            className="gallery-like-button"
+                                            onClick={(e) => toggleLike(e, puzzle)}
+                                        >
+                                            {puzzle.isLikedByCurrentUser ? "❤️" : "🤍"}{" "}
+                                            {puzzle.likesCount ?? 0}
+                                        </button>
+                                    </div>
                                 </div>
-                            </div>
-                        ))}
+                            );
+                        })}
                     </div>
                 )}
             </section>
 
             {zoomedPuzzle && (
-                <div className="gallery-zoom-overlay" onClick={() => setZoomedPuzzle(null)}>
-                    <div className="gallery-zoom-dialog" onClick={(e) => e.stopPropagation()}>
+                <div
+                    className="gallery-zoom-overlay"
+                    onClick={() => setZoomedPuzzle(null)}
+                >
+                    <div
+                        className="gallery-zoom-dialog"
+                        onClick={(e) => e.stopPropagation()}
+                    >
                         <button
                             type="button"
                             className="gallery-zoom-close"
@@ -128,16 +263,19 @@ function MainPage() {
                         >
                             ×
                         </button>
+
                         <img
                             src={getImageUrl(zoomedPuzzle.filePath)}
                             alt={zoomedPuzzle.originalFilename}
                             className="gallery-zoom-img"
                         />
+
                         <div className="gallery-zoom-details">
                             <strong>{zoomedPuzzle.originalFilename}</strong>
                             <span>Autorius: {zoomedPuzzle.username}</span>
                             <span>{zoomedPuzzle.pieceCount} detalės</span>
                             <span>{zoomedPuzzle.aspectRatio}</span>
+                            <span>Patinka: {zoomedPuzzle.likesCount ?? 0}</span>
                         </div>
                     </div>
                 </div>
