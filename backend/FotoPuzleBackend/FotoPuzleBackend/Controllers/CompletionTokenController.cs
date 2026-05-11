@@ -25,17 +25,11 @@ namespace FotoPuzleBackend.Controllers
             var userId = int.Parse(User.FindFirst("userId")!.Value);
             _logger.LogInformation("Token issue request for user {UserId}, puzzle {PuzzleId}", userId, request.PuzzleId);
 
-            try
-            {
-                var token = await _tokenService.IssueTokenAsync(userId, request.PuzzleId);
-                _logger.LogInformation("Token issued successfully for user {UserId}, puzzle {PuzzleId}", userId, request.PuzzleId);
-                return Ok(new { token.Token, token.EarnedAt });
-            }
-            catch (InvalidOperationException ex)
-            {
-                _logger.LogWarning("Token issue failed for user {UserId}, puzzle {PuzzleId}: {Reason}", userId, request.PuzzleId, ex.Message);
-                return BadRequest(new { error = ex.Message });
-            }
+            var token = await _tokenService.IssueTokenAsync(userId, request.PuzzleId);
+            _logger.LogInformation("Token issued successfully for user {UserId}, puzzle {PuzzleId}", userId, request.PuzzleId);
+
+            return Ok(new { token.Token, token.EarnedAt });
+
         }
 
         // GET /api/completiontoken/my?userId=1
