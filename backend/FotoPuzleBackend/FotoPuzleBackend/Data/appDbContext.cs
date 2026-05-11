@@ -12,6 +12,7 @@ namespace FotoPuzleBackend.Data
         public DbSet<Puzzle> Puzzles => Set<Puzzle>();
         public DbSet<Order> Orders => Set<Order>();
         public DbSet<CompletionToken> CompletionTokens => Set<CompletionToken>();
+        public DbSet<PuzzleLike> PuzzleLikes => Set<PuzzleLike>();
 
         protected override void OnModelCreating(ModelBuilder modelBuilder)
         {
@@ -57,6 +58,28 @@ namespace FotoPuzleBackend.Data
 
             modelBuilder.Entity<CompletionToken>()
                 .HasIndex(ct => ct.UserId);
+
+            modelBuilder.Entity<PuzzleLike>()
+                .HasIndex(pl => new { pl.UserId, pl.PuzzleId })
+                .IsUnique();
+
+            modelBuilder.Entity<PuzzleLike>()
+                .HasIndex(pl => pl.PuzzleId);
+
+            modelBuilder.Entity<PuzzleLike>()
+                .HasIndex(pl => pl.UserId);
+
+            modelBuilder.Entity<PuzzleLike>()
+                .HasOne(pl => pl.User)
+                .WithMany()
+                .HasForeignKey(pl => pl.UserId)
+                .OnDelete(DeleteBehavior.Cascade);
+
+            modelBuilder.Entity<PuzzleLike>()
+                .HasOne(pl => pl.Puzzle)
+                .WithMany()
+                .HasForeignKey(pl => pl.PuzzleId)
+                .OnDelete(DeleteBehavior.Cascade);
         }
     }
 }
